@@ -1,0 +1,205 @@
+# Structural Equation Modeling II: Mediation {#sec-sem2}
+
+A mediation model asks *how* or *why* a predictor affects an outcome. It proposes that some or all of the effect of a predictor (*X*) travels through a third variable, the mediator (*M*), on its way to the outcome (*Y*). In this chapter, we estimate mediation models in `lavaan`. We start with observed variables and then extend the same model to latent variables.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(lavaan)
+library(semPlot)
+```
+
+## The paths in a mediation model
+
+A simple mediation model has three paths:
+
+- The **a path** runs from *X* to *M*.
+- The **b path** runs from *M* to *Y*, controlling for *X*.
+- The **c′ path** (c-prime) runs from *X* to *Y*, controlling for *M*. This is the **direct effect**.
+
+From these paths, we can build two more quantities:
+
+- The **indirect effect** is the product *a* × *b*. It is the part of the effect of *X* that passes through *M*.
+- The **total effect** is *c′* + *ab*. It equals the slope you would get by regressing *Y* on *X* alone (the *c* path).
+
+## Mediation with observed variables
+
+### The data
+
+::: {.callout-note appearance="simple"}
+**Note:** These are simulated data for 500 respondents. All three variables are scale scores centered near zero.
+:::
+
+The model proposes that conscientiousness (`consc`) is related to overall physical health (`health`) partly because conscientious people tend to engage in more health-related behaviors (`behave`).
+
+```{r}
+health <- read_dta("data/health_old.dta")
+glimpse(health)
+```
+
+### Specifying the model
+
+The model syntax has three parts. First, we write the regressions and attach a label to each path with `*`. Here, `c *` labels the direct path, `a *` the path to the mediator, and `b *` the path from the mediator. Second, we use the `:=` operator to define new parameters from those labels: the indirect effect `ab` and the total effect. Because `lavaan` estimates these defined parameters directly, it also gives us their standard errors and *p*-values.
+
+```{r}
+med_model <- '
+  # direct effect
+  health ~ c * consc
+
+  # mediator
+  behave ~ a * consc
+  health ~ b * behave
+
+  # indirect effect (a * b)
+  ab := a * b
+
+  # total effect
+  total := c + (a * b)
+'
+```
+
+A few variables have missing values. The option `missing = "ml"` uses full information maximum likelihood (FIML) to keep every case in the analysis. Adding `fixed.x = FALSE` extends FIML to the predictor, `consc`, as well. Without it, `lavaan` drops the five cases missing `consc`.
+
+```{r}
+med_fit <- sem(med_model, data = health, missing = "ml", fixed.x = FALSE)
+summary(med_fit, standardized = TRUE)
+```
+
+All three paths are positive and significant. The indirect effect (`ab`) is 0.21, and the total effect is 0.47. Thus, about 43% of the total effect of conscientiousness on health (0.21 / 0.47) appears to run through health behaviors. The direct effect remains significant, so health behaviors account for only part of the relationship. This pattern is often called *partial mediation*.
+
+This model has zero degrees of freedom: it estimates every possible path among the three variables. Such a model is *just-identified*. It fits the data perfectly by definition, so fit statistics like CFI and RMSEA are not informative here.
+
+`lavInspect()` returns the proportion of variance explained in each endogenous variable:
+
+```{r}
+lavInspect(med_fit, "r2")
+```
+
+### Bootstrapped confidence intervals
+
+The standard error for the indirect effect assumes that *ab* is normally distributed. Because it is a product of two estimates, its sampling distribution is often skewed, especially in small samples. A bootstrap confidence interval does not rely on that assumption. For this reason, it is the recommended way to test an indirect effect.
+
+Bootstrapping refits the model to many resampled datasets, so this step can take a moment. Setting a seed makes the results reproducible.
+
+```{r}
+set.seed(663)
+med_boot <- sem(med_model, data = health, missing = "ml", fixed.x = FALSE,
+                se = "bootstrap", bootstrap = 1000)
+
+parameterEstimates(med_boot, boot.ci.type = "perc") |>
+  filter(op %in% c("~", ":="))
+```
+
+The 95% percentile interval for `ab` does not include zero. This supports the conclusion that the indirect effect is statistically significant.
+
+### Path diagram
+
+```{r}
+semPaths(med_fit, whatLabels = "std", intercepts = FALSE, residuals = FALSE,
+         nCharNodes = 0, sizeMan = 12, edge.label.cex = 1.2)
+```
+
+## Mediation with latent variables
+
+Mediation models can also link latent variables. This takes two steps, much like the full SEM models in @sec-sem1. First, we specify and check a measurement model. Second, we add the structural (mediation) paths.
+
+### The data
+
+The `writing` data include 1,509 students' responses to three writing-related scales, each rated on a 4-point scale:
+
+- Feedback perceptions (`FBP`): 5 items
+- Writing self-efficacy (`SE`): 9 items
+- Writing self-regulation (`SR`): 12 items
+
+The model proposes that self-efficacy is related to self-regulation partly through students' perceptions of feedback.
+
+::: {.callout-note appearance="simple"}
+**Note:** Students in these data are grouped within 65 teachers (`W1_TNum`). Students who share a teacher may be more alike than students who do not, and this can make standard errors too small. For simplicity, the models in this chapter ignore that nesting. Multilevel SEM can account for it.
+:::
+
+```{r}
+writing <- read_dta("data/writing.dta")
+glimpse(writing)
+```
+
+### Step 1: The measurement model
+
+We start with a confirmatory factor analysis (@sec-cfa) of all three scales:
+
+```{r}
+cfa_model <- '
+  FBP =~ W1_FBP1 + W1_FBP2 + W1_FBP3 + W1_FBP4 + W1_FBP5
+  SE  =~ W1_SE1 + W1_SE2 + W1_SE3 + W1_SE4 + W1_SE5 + W1_SE6 +
+         W1_SE7 + W1_SE8 + W1_SE9
+  SR  =~ W1_SR1 + W1_SR2 + W1_SR3 + W1_SR4 + W1_SR5 + W1_SR6 +
+         W1_SR7 + W1_SR8 + W1_SR9 + W1_SR10 + W1_SR11 + W1_SR12
+'
+
+cfa_fit <- cfa(cfa_model, data = writing, missing = "ml")
+summary(cfa_fit, fit.measures = TRUE, standardized = TRUE)
+```
+
+Fit is mixed. RMSEA (0.062) and SRMR (0.050) fall within common guidelines, but CFI (0.87) and TLI (0.86) are below the usual 0.90 to 0.95 range. In a real analysis, we would look for the source of misfit (for example, items with weak loadings or correlated residuals) before going further. For this demonstration, we proceed with the model as specified.
+
+The path diagram below leaves out the intercepts and item residuals to keep it readable:
+
+```{r}
+#| fig-height: 6
+semPaths(cfa_fit, whatLabels = "std", intercepts = FALSE, residuals = FALSE,
+         sizeMan = 3, edge.label.cex = 0.6)
+```
+
+### Step 2: The structural model
+
+The full model combines the measurement model from Step 1 with mediation paths among the latent variables. The structural part uses the same labels and `:=` definitions as the observed-variable model.
+
+```{r}
+sem_model <- paste(cfa_model, '
+  # direct effect
+  SR ~ c * SE
+
+  # mediator
+  FBP ~ a * SE
+  SR  ~ b * FBP
+
+  # indirect and total effects
+  ab := a * b
+  total := c + (a * b)
+')
+
+sem_fit <- sem(sem_model, data = writing, missing = "ml")
+summary(sem_fit, fit.measures = TRUE, standardized = TRUE)
+```
+
+`paste()` joins the measurement model and the structural paths into one model string, so we do not have to retype the items.
+
+Notice that the fit statistics are identical to those of the CFA. The structural part of this model is just-identified, like the observed-variable model above. It adds paths but uses no additional degrees of freedom. As a result, any misfit comes from the measurement model.
+
+In the standardized solution, the indirect effect of self-efficacy on self-regulation through feedback perceptions is 0.21, and the direct effect is 0.56. As in the first example, this suggests partial mediation.
+
+```{r}
+lavInspect(sem_fit, "r2")[c("FBP", "SR")]
+```
+
+### Bootstrapped confidence intervals
+
+The same bootstrap approach works for the latent model. With 26 items and 1,509 students, this one takes several minutes to run.
+
+```{r}
+set.seed(663)
+sem_boot <- sem(sem_model, data = writing, missing = "ml",
+                se = "bootstrap", bootstrap = 1000)
+
+parameterEstimates(sem_boot, boot.ci.type = "perc") |>
+  filter(op %in% c("~", ":="))
+```
+
+### Path diagram
+
+With 26 items, a full diagram is hard to read. `structural = TRUE` draws only the paths among the latent variables:
+
+```{r}
+semPaths(sem_fit, whatLabels = "std", structural = TRUE,
+         intercepts = FALSE, residuals = FALSE, sizeLat = 12,
+         edge.label.cex = 1.2)
+```

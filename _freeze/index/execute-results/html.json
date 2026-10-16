@@ -1,0 +1,19 @@
+{
+  "hash": "45a39003b02052752d0ad35cf8be3d0d",
+  "result": {
+    "engine": "knitr",
+    "markdown": "# Welcome {.unnumbered}\n\nThis book collects the worked R examples for **EDUS 663: Applied Multivariate Statistics in Education** at Virginia Commonwealth University. Each chapter follows one course module and walks through a complete analysis: loading and preparing data, fitting the model, checking it, and interpreting the results.\n\nThe chapters are designed to be read alongside the module readings (mostly from Hancock, Stapleton, & Mueller's *The Reviewer's Guide to Quantitative Methods in the Social Sciences*) and the lecture videos.\n\n## How to use this book\n\n- Every dataset used in the book is in the `data/` folder of the [GitHub repository](https://github.com/mikediam123/mvs-textbook). Download the folder and keep it next to your R project so the code runs as written.\n- Code is written in tidyverse style. Copy any chunk with the button in its top-right corner.\n- Most methods in this course extend regression and ANOVA. If a chapter feels like a big jump, revisit @sec-review first.\n\n## Packages\n\nThe packages used across the book can be installed in one step:\n\n\n::: {.cell}\n\n```{.r .cell-code}\ninstall.packages(c(\n  \"tidyverse\", \"haven\", \"psych\", \"effectsize\", \"modelsummary\",\n  \"rstatix\", \"ggpubr\", \"ggeffects\", \"lmtest\", \"broom\", \"car\",\n  \"performance\", \"mice\", \"naniar\", \"corrplot\", \"factoextra\",\n  \"GPArotation\", \"lavaan\", \"semPlot\"\n))\n```\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<link href=\"site_libs/pagedtable-1.1/css/pagedtable.css\" rel=\"stylesheet\" />\n<script src=\"site_libs/pagedtable-1.1/js/pagedtable.js\"></script>\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

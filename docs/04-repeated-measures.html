@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; ANCOVA and Repeated Measures ANOVA – Applied Multivariate Statistics in Education</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05-assumptions.html" rel="next">
+<link href="./03-moderation.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-18a86156fa881a144d2995565f3cba36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-moderation.html">Extending the General Linear Model</a></li><li class="breadcrumb-item"><a href="./04-repeated-measures.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">ANCOVA and Repeated Measures ANOVA</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Applied Multivariate Statistics in Education</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/mikediam123/mvs-textbook" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-anova-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Review of Regression and ANOVA</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extending the General Linear Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-moderation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Moderation and Interaction Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-repeated-measures.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">ANCOVA and Repeated Measures ANOVA</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Checking Model Assumptions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-missing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Missing Data and Multiple Imputation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Classification and Measurement</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Cluster Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-efa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exploratory Factor Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Confirmatory Factor Analysis</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Structural Equation Modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-sem-path-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Structural Equation Modeling I: Path Analysis and Latent Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-sem-mediation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Structural Equation Modeling II: Mediation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#ancova-with-a-pretest-covariate" id="toc-ancova-with-a-pretest-covariate" class="nav-link active" data-scroll-target="#ancova-with-a-pretest-covariate"><span class="header-section-number">4.1</span> ANCOVA with a pretest covariate</a>
+  <ul class="collapse">
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data"><span class="header-section-number">4.1.1</span> The data</a></li>
+  <li><a href="#anova-without-the-covariate" id="toc-anova-without-the-covariate" class="nav-link" data-scroll-target="#anova-without-the-covariate"><span class="header-section-number">4.1.2</span> ANOVA without the covariate</a></li>
+  <li><a href="#adding-the-covariate" id="toc-adding-the-covariate" class="nav-link" data-scroll-target="#adding-the-covariate"><span class="header-section-number">4.1.3</span> Adding the covariate</a></li>
+  <li><a href="#ancova-as-a-regression" id="toc-ancova-as-a-regression" class="nav-link" data-scroll-target="#ancova-as-a-regression"><span class="header-section-number">4.1.4</span> ANCOVA as a regression</a></li>
+  </ul></li>
+  <li><a href="#ancova-with-related-covariates" id="toc-ancova-with-related-covariates" class="nav-link" data-scroll-target="#ancova-with-related-covariates"><span class="header-section-number">4.2</span> ANCOVA with related covariates</a></li>
+  <li><a href="#repeated-measures-anova" id="toc-repeated-measures-anova" class="nav-link" data-scroll-target="#repeated-measures-anova"><span class="header-section-number">4.3</span> Repeated measures ANOVA</a>
+  <ul class="collapse">
+  <li><a href="#the-data-1" id="toc-the-data-1" class="nav-link" data-scroll-target="#the-data-1"><span class="header-section-number">4.3.1</span> The data</a></li>
+  <li><a href="#reshaping-from-wide-to-long" id="toc-reshaping-from-wide-to-long" class="nav-link" data-scroll-target="#reshaping-from-wide-to-long"><span class="header-section-number">4.3.2</span> Reshaping from wide to long</a></li>
+  <li><a href="#exploring-the-data" id="toc-exploring-the-data" class="nav-link" data-scroll-target="#exploring-the-data"><span class="header-section-number">4.3.3</span> Exploring the data</a></li>
+  <li><a href="#checking-assumptions" id="toc-checking-assumptions" class="nav-link" data-scroll-target="#checking-assumptions"><span class="header-section-number">4.3.4</span> Checking assumptions</a></li>
+  <li><a href="#running-the-model" id="toc-running-the-model" class="nav-link" data-scroll-target="#running-the-model"><span class="header-section-number">4.3.5</span> Running the model</a></li>
+  <li><a href="#post-hoc-comparisons" id="toc-post-hoc-comparisons" class="nav-link" data-scroll-target="#post-hoc-comparisons"><span class="header-section-number">4.3.6</span> Post-hoc comparisons</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-moderation.html">Extending the General Linear Model</a></li><li class="breadcrumb-item"><a href="./04-repeated-measures.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">ANCOVA and Repeated Measures ANOVA</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-repeated-measures" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">ANCOVA and Repeated Measures ANOVA</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This chapter extends the ANOVA model in two directions. First, analysis of covariance (ANCOVA) adds continuous covariates to a between-groups comparison. This can reduce error variance and increase power. Second, repeated measures ANOVA compares means when the same participants are measured more than once.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effectsize)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstatix)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="ancova-with-a-pretest-covariate" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="ancova-with-a-pretest-covariate"><span class="header-section-number">4.1</span> ANCOVA with a pretest covariate</h2>
+<section id="the-data" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="the-data"><span class="header-section-number">4.1.1</span> The data</h3>
+<p>In our first example, 82 participants were randomly assigned to a control group or to an optimism therapy group. Happiness was measured before (<code>hap_pre</code>) and after (<code>hap_post</code>) the intervention.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hap1 <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/hap-ancova1.dta"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>hap1_clean <span class="ot">&lt;-</span> hap1 <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">treat =</span> <span class="fu">as_factor</span>(treat))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(hap1_clean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       id           hap_pre        hap_post                        treat   
+ Min.   : 1.00   Min.   :28.0   Min.   :30.00   Control group         :41  
+ 1st Qu.:21.25   1st Qu.:44.0   1st Qu.:47.00   Optimism therapy group:41  
+ Median :41.50   Median :51.5   Median :51.00                              
+ Mean   :41.50   Mean   :51.3   Mean   :53.46                              
+ 3rd Qu.:61.75   3rd Qu.:58.0   3rd Qu.:59.00                              
+ Max.   :82.00   Max.   :81.0   Max.   :77.00                              </code></pre>
+</div>
+</div>
+<p>A covariate is only useful if it is related to the outcome. Here, pretest and posttest happiness are moderately correlated:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(hap1_clean<span class="sc">$</span>hap_pre, hap1_clean<span class="sc">$</span>hap_post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  hap1_clean$hap_pre and hap1_clean$hap_post
+t = 6.3349, df = 80, p-value = 1.302e-08
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.4127435 0.7063892
+sample estimates:
+      cor 
+0.5779818 </code></pre>
+</div>
+</div>
+</section>
+<section id="anova-without-the-covariate" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="anova-without-the-covariate"><span class="header-section-number">4.1.2</span> ANOVA without the covariate</h3>
+<p>For comparison, we first ignore the pretest and compare posttest means with a one-way ANOVA:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>anova1 <span class="ot">&lt;-</span> <span class="fu">aov</span>(hap_post <span class="sc">~</span> treat, <span class="at">data =</span> hap1_clean)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)
+treat        1    226  225.56   2.381  0.127
+Residuals   80   7579   94.74               </code></pre>
+</div>
+</div>
+<p>The treatment group’s posttest mean is higher, but the difference is not significant.</p>
+</section>
+<section id="adding-the-covariate" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="adding-the-covariate"><span class="header-section-number">4.1.3</span> Adding the covariate</h3>
+<p>Now we add <code>hap_pre</code> as a covariate. The order of terms in <code>aov()</code> matters. <code>aov()</code> uses <em>sequential</em> (Type I) sums of squares, so each term is adjusted only for the terms listed before it. To test the treatment effect <em>after</em> adjusting for the pretest, the covariate must come first.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ancova1 <span class="ot">&lt;-</span> <span class="fu">aov</span>(hap_post <span class="sc">~</span> hap_pre <span class="sc">+</span> treat, <span class="at">data =</span> hap1_clean)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ancova1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+hap_pre      1   2607  2607.2  42.220 6.7e-09 ***
+treat        1    319   318.8   5.163  0.0258 *  
+Residuals   79   4878    61.8                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>After adjusting for pretest happiness, the treatment effect is significant. Two things changed. First, the pretest absorbed much of the error variance, which made the test of the treatment effect more sensitive. Second, the treatment group started slightly lower at pretest, so adjusting for the pretest makes the treatment effect a little larger.</p>
+<p>When two loaded packages have functions with the same name, the one loaded last <em>masks</em> the other. To make sure R uses the <code>omega_squared()</code> function from <code>effectsize</code>, we name the package with <code>::</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>effectsize<span class="sc">::</span><span class="fu">omega_squared</span>(ancova1, <span class="at">partial =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Parameter"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Omega2_partial"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["CI"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CI_low"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["CI_high"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"hap_pre","2":"0.3345221","3":"0.95","4":"0.2000433526","5":"1"},{"1":"treat","2":"0.0483130","3":"0.95","4":"0.0001554984","5":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="ancova-as-a-regression" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="ancova-as-a-regression"><span class="header-section-number">4.1.4</span> ANCOVA as a regression</h3>
+<p>ANCOVA is a regression model with a categorical predictor and a continuous covariate. The regression output gives the same test of the treatment effect, along with a coefficient that is easier to interpret:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>regression1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(hap_post <span class="sc">~</span> hap_pre <span class="sc">+</span> treat, <span class="at">data =</span> hap1_clean)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regression1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = hap_post ~ hap_pre + treat, data = hap1_clean)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-20.7017  -3.7916  -0.0503   4.2741  18.3137 
+
+Coefficients:
+                            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                  20.5479     4.8834   4.208 6.76e-05 ***
+hap_pre                       0.6031     0.0912   6.613 4.07e-09 ***
+treatOptimism therapy group   3.9496     1.7382   2.272   0.0258 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7.858 on 79 degrees of freedom
+Multiple R-squared:  0.3749,    Adjusted R-squared:  0.3591 
+F-statistic: 23.69 on 2 and 79 DF,  p-value: 8.702e-09</code></pre>
+</div>
+</div>
+<p>Holding pretest happiness constant, participants in the optimism therapy group scored about 3.9 points higher at posttest than participants in the control group. The <em>p</em>-value matches the ANCOVA above.</p>
+</section>
+</section>
+<section id="ancova-with-related-covariates" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="ancova-with-related-covariates"><span class="header-section-number">4.2</span> ANCOVA with related covariates</h2>
+<p>A pretest is not the only possible covariate. Measures related to the outcome can play the same role. The second dataset comes from a similar trial with 96 participants. It measures happiness (<code>hap</code>) only after the intervention, along with three covariates: satisfaction with family life (<code>satfam</code>), satisfaction with health (<code>health</code>), and how often participants socialize with friends (<code>socfriend</code>). Each covariate is a 7-point rating, treated here as continuous.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hap2 <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/hap-ancova2.dta"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>hap2_clean <span class="ot">&lt;-</span> hap2 <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">treat =</span> <span class="fu">as_factor</span>(treat))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(hap2_clean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 96
+Columns: 6
+$ id        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1…
+$ hap       &lt;dbl&gt; 34, 44, 58, 58, 50, 51, 48, 64, 36, 54, 42, 55, 41, 40, 45, …
+$ treat     &lt;fct&gt; Control group, Control group, Control group, Control group, …
+$ satfam    &lt;dbl+lbl&gt; 5, 6, 6, 5, 3, 4, 5, 5, 6, 4, 3, 5, 5, 2, 4, 3, 4, 3, 5,…
+$ health    &lt;dbl+lbl&gt; 2, 5, 5, 4, 5, 3, 5, 4, 4, 3, 3, 3, 3, 4, 3, 3, 4, 5, 3,…
+$ socfriend &lt;dbl+lbl&gt; 6, 4, 3, 2, 5, 5, 5, 7, 5, 4, 4, 4, 5, 6, 4, 5, 5, 7, 6,…</code></pre>
+</div>
+</div>
+<p>How much of the variance in happiness do the covariates explain on their own?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>covariates_only <span class="ot">&lt;-</span> <span class="fu">lm</span>(hap <span class="sc">~</span> satfam <span class="sc">+</span> health <span class="sc">+</span> socfriend, <span class="at">data =</span> hap2_clean)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(covariates_only)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2878123</code></pre>
+</div>
+</div>
+<p>The three covariates explain about 29% of the variance in happiness. That is variance the ANCOVA can remove from the error term. As before, we list the covariates first:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>ancova2 <span class="ot">&lt;-</span> <span class="fu">aov</span>(hap <span class="sc">~</span> satfam <span class="sc">+</span> health <span class="sc">+</span> socfriend <span class="sc">+</span> treat, <span class="at">data =</span> hap2_clean)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ancova2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+satfam       1   1579  1578.6  21.010 1.45e-05 ***
+health       1   1068  1067.7  14.210  0.00029 ***
+socfriend    1    290   290.4   3.866  0.05234 .  
+treat        1    430   429.6   5.718  0.01885 *  
+Residuals   91   6837    75.1                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>regression2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(hap <span class="sc">~</span> satfam <span class="sc">+</span> health <span class="sc">+</span> socfriend <span class="sc">+</span> treat, <span class="at">data =</span> hap2_clean)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regression2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = hap ~ satfam + health + socfriend + treat, data = hap2_clean)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-18.9098  -6.6984   0.6385   5.9155  17.7141 
+
+Coefficients:
+                            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                  19.1636     5.0862   3.768 0.000292 ***
+satfam                        2.3761     0.6376   3.727 0.000337 ***
+health                        3.4395     0.8856   3.884 0.000195 ***
+socfriend                     1.4992     0.7689   1.950 0.054288 .  
+treatOptimism therapy group   4.3025     1.7993   2.391 0.018849 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 8.668 on 91 degrees of freedom
+Multiple R-squared:  0.3299,    Adjusted R-squared:  0.3005 
+F-statistic:  11.2 on 4 and 91 DF,  p-value: 1.964e-07</code></pre>
+</div>
+</div>
+</section>
+<section id="repeated-measures-anova" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="repeated-measures-anova"><span class="header-section-number">4.3</span> Repeated measures ANOVA</h2>
+<section id="the-data-1" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="the-data-1"><span class="header-section-number">4.3.1</span> The data</h3>
+<p>In a repeated measures design, each participant contributes more than one score. The <code>sleep_wide</code> data record the average minutes of sleep per night for 100 participants over three months.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sleep_wide <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/sleep_wide.dta"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sleep_wide)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 100
+Columns: 4
+$ id     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, …
+$ sleep1 &lt;dbl&gt; 303, 331, 374, 374, 349, 353, 343, 390, 307, 360, 327, 365, 322…
+$ sleep2 &lt;dbl&gt; 349, 380, 400, 385, 442, 365, 370, 399, 410, 346, 371, 341, 364…
+$ sleep3 &lt;dbl&gt; 382, 350, 345, 356, 366, 372, 354, 352, 375, 403, 336, 406, 368…</code></pre>
+</div>
+</div>
+</section>
+<section id="reshaping-from-wide-to-long" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="reshaping-from-wide-to-long"><span class="header-section-number">4.3.2</span> Reshaping from wide to long</h3>
+<p>These data are in <em>wide</em> format, with one row per participant and one column per month. Most repeated measures functions in R expect <em>long</em> format, with one row per participant per month. <code>pivot_longer()</code> reshapes the data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sleep_long <span class="ot">&lt;-</span> sleep_wide <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"sleep"</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"month"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"sleep"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"sleep"</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">factor</span>(month))</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sleep_long)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 300
+Columns: 3
+$ id    &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8…
+$ month &lt;fct&gt; 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1…
+$ sleep &lt;dbl&gt; 303, 349, 382, 331, 380, 350, 374, 400, 345, 374, 385, 356, 349,…</code></pre>
+</div>
+</div>
+<p><code>pivot_wider()</code> reverses the process if you need to go back:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sleep_long <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> month,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"sleep"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> sleep</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sleep1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sleep2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sleep3"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"303","3":"349","4":"382"},{"1":"2","2":"331","3":"380","4":"350"},{"1":"3","2":"374","3":"400","4":"345"},{"1":"4","2":"374","3":"385","4":"356"},{"1":"5","2":"349","3":"442","4":"366"},{"1":"6","2":"353","3":"365","4":"372"},{"1":"7","2":"343","3":"370","4":"354"},{"1":"8","2":"390","3":"399","4":"352"},{"1":"9","2":"307","3":"410","4":"375"},{"1":"10","2":"360","3":"346","4":"403"},{"1":"11","2":"327","3":"371","4":"336"},{"1":"12","2":"365","3":"341","4":"406"},{"1":"13","2":"322","3":"364","4":"368"},{"1":"14","2":"318","3":"347","4":"345"},{"1":"15","2":"335","3":"379","4":"352"},{"1":"16","2":"378","3":"393","4":"392"},{"1":"17","2":"355","3":"341","4":"378"},{"1":"18","2":"346","3":"317","4":"373"},{"1":"19","2":"358","3":"389","4":"347"},{"1":"20","2":"329","3":"352","4":"325"},{"1":"21","2":"352","3":"336","4":"359"},{"1":"22","2":"327","3":"368","4":"367"},{"1":"23","2":"329","3":"321","4":"361"},{"1":"24","2":"362","3":"435","4":"409"},{"1":"25","2":"319","3":"311","4":"437"},{"1":"26","2":"353","3":"354","4":"348"},{"1":"27","2":"296","3":"398","4":"365"},{"1":"28","2":"325","3":"371","4":"368"},{"1":"29","2":"323","3":"308","4":"373"},{"1":"30","2":"355","3":"337","4":"365"},{"1":"31","2":"338","3":"358","4":"353"},{"1":"32","2":"341","3":"329","4":"340"},{"1":"33","2":"376","3":"381","4":"370"},{"1":"34","2":"338","3":"391","4":"363"},{"1":"35","2":"356","3":"348","4":"385"},{"1":"36","2":"376","3":"361","4":"393"},{"1":"37","2":"342","3":"380","4":"403"},{"1":"38","2":"287","3":"342","4":"376"},{"1":"39","2":"343","3":"376","4":"400"},{"1":"40","2":"302","3":"356","4":"407"},{"1":"41","2":"356","3":"354","4":"340"},{"1":"42","2":"321","3":"379","4":"371"},{"1":"43","2":"402","3":"356","4":"388"},{"1":"44","2":"355","3":"402","4":"364"},{"1":"45","2":"363","3":"351","4":"298"},{"1":"46","2":"390","3":"323","4":"382"},{"1":"47","2":"345","3":"345","4":"370"},{"1":"48","2":"349","3":"348","4":"349"},{"1":"49","2":"393","3":"389","4":"390"},{"1":"50","2":"390","3":"362","4":"340"},{"1":"51","2":"307","3":"346","4":"325"},{"1":"52","2":"327","3":"389","4":"377"},{"1":"53","2":"367","3":"360","4":"374"},{"1":"54","2":"407","3":"370","4":"381"},{"1":"55","2":"346","3":"348","4":"337"},{"1":"56","2":"346","3":"354","4":"349"},{"1":"57","2":"330","3":"364","4":"394"},{"1":"58","2":"369","3":"381","4":"324"},{"1":"59","2":"304","3":"349","4":"376"},{"1":"60","2":"355","3":"386","4":"348"},{"1":"61","2":"372","3":"361","4":"357"},{"1":"62","2":"350","3":"365","4":"331"},{"1":"63","2":"389","3":"319","4":"380"},{"1":"64","2":"336","3":"369","4":"421"},{"1":"65","2":"288","3":"335","4":"330"},{"1":"66","2":"374","3":"373","4":"359"},{"1":"67","2":"385","3":"448","4":"378"},{"1":"68","2":"308","3":"390","4":"398"},{"1":"69","2":"324","3":"336","4":"364"},{"1":"70","2":"358","3":"396","4":"382"},{"1":"71","2":"345","3":"390","4":"329"},{"1":"72","2":"434","3":"409","4":"390"},{"1":"73","2":"365","3":"409","4":"366"},{"1":"74","2":"311","3":"388","4":"355"},{"1":"75","2":"276","3":"368","4":"361"},{"1":"76","2":"309","3":"362","4":"427"},{"1":"77","2":"343","3":"412","4":"391"},{"1":"78","2":"338","3":"387","4":"339"},{"1":"79","2":"311","3":"325","4":"297"},{"1":"80","2":"357","3":"371","4":"348"},{"1":"81","2":"308","3":"325","4":"307"},{"1":"82","2":"314","3":"391","4":"353"},{"1":"83","2":"356","3":"378","4":"395"},{"1":"84","2":"335","3":"466","4":"383"},{"1":"85","2":"299","3":"363","4":"338"},{"1":"86","2":"374","3":"322","4":"377"},{"1":"87","2":"363","3":"342","4":"338"},{"1":"88","2":"314","3":"382","4":"373"},{"1":"89","2":"407","3":"407","4":"417"},{"1":"90","2":"301","3":"359","4":"347"},{"1":"91","2":"390","3":"423","4":"349"},{"1":"92","2":"384","3":"397","4":"325"},{"1":"93","2":"332","3":"326","4":"372"},{"1":"94","2":"369","3":"405","4":"389"},{"1":"95","2":"370","3":"387","4":"392"},{"1":"96","2":"383","3":"357","4":"429"},{"1":"97","2":"394","3":"414","4":"390"},{"1":"98","2":"421","3":"346","4":"369"},{"1":"99","2":"390","3":"396","4":"362"},{"1":"100","2":"368","3":"375","4":"363"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="exploring-the-data" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="exploring-the-data"><span class="header-section-number">4.3.3</span> Exploring the data</h3>
+<p>Long format makes it easy to summarize and plot by month:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>sleep_long <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_summary_stats</span>(sleep, <span class="at">type =</span> <span class="st">"mean_sd"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["month"],"name":[1],"type":["fct"],"align":["left"]},{"label":["variable"],"name":[2],"type":["fct"],"align":["left"]},{"label":["n"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mean"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"sleep","3":"100","4":"348.24","5":"31.607"},{"1":"2","2":"sleep","3":"100","4":"369.31","5":"30.626"},{"1":"3","2":"sleep","3":"100","4":"366.67","5":"27.180"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sleep_long, <span class="fu">aes</span>(<span class="at">x =</span> sleep)) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> month, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">labeller =</span> label_both) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Sleep (minutes per night)"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-repeated-measures_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="checking-assumptions" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="checking-assumptions"><span class="header-section-number">4.3.4</span> Checking assumptions</h3>
+<p>Repeated measures ANOVA assumes that the outcome is approximately normal at each time point. A Q-Q plot and a Shapiro-Wilk test for each month check this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggqqplot</span>(sleep_long, <span class="st">"sleep"</span>, <span class="at">facet.by =</span> <span class="st">"month"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-repeated-measures_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sleep_long <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shapiro_test</span>(sleep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["month"],"name":[1],"type":["fct"],"align":["left"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["statistic"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["p"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"sleep","3":"0.9934738","4":"0.9149310"},{"1":"2","2":"sleep","3":"0.9833630","4":"0.2406479"},{"1":"3","2":"sleep","3":"0.9931223","4":"0.8953280"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Points fall close to the line, and none of the Shapiro-Wilk tests are significant. This suggests the normality assumption is reasonable. Because the three scores come from the same people, we can also test whether they are jointly (multivariate) normal:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sleep_wide <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"sleep"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mshapiro_test</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["statistic"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.9824606","2":"0.2057096"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>A second assumption, <em>sphericity</em>, requires that the variances of the differences between every pair of time points are equal. <code>anova_test()</code> checks it automatically, as shown in the next section.</p>
+</section>
+<section id="running-the-model" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="running-the-model"><span class="header-section-number">4.3.5</span> Running the model</h3>
+<p><code>anova_test()</code> from <code>rstatix</code> needs the outcome (<code>dv</code>), the participant identifier (<code>wid</code>), and the within-subjects factor (<code>within</code>):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sleep_aov <span class="ot">&lt;-</span> <span class="fu">anova_test</span>(<span class="at">data =</span> sleep_long, <span class="at">dv =</span> sleep, <span class="at">wid =</span> id, <span class="at">within =</span> month)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>sleep_aov</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA Table (type III tests)
+
+$ANOVA
+  Effect DFn DFd      F        p p&lt;.05  ges
+1  month   2 198 17.938 6.92e-08     * 0.09
+
+$`Mauchly's Test for Sphericity`
+  Effect W     p p&lt;.05
+1  month 1 0.995      
+
+$`Sphericity Corrections`
+  Effect GGe    DF[GG]    p[GG] p[GG]&lt;.05   HFe       DF[HF]    p[HF] p[HF]&lt;.05
+1  month   1 2, 197.98 6.93e-08         * 1.021 2.04, 202.06 6.92e-08         *</code></pre>
+</div>
+</div>
+<p>The output has three parts:</p>
+<ol type="1">
+<li>The <strong>ANOVA table</strong>. Average sleep differs significantly across months. <code>ges</code> is the generalized eta squared effect size.</li>
+<li><strong>Mauchly’s test for sphericity</strong>. A non-significant result (as here) suggests the sphericity assumption is met.</li>
+<li><strong>Sphericity corrections</strong>. If Mauchly’s test were significant, we would report the Greenhouse-Geisser (GG) corrected <em>p</em>-value instead.</li>
+</ol>
+<p><code>get_anova_table()</code> returns the table to report. It applies the Greenhouse-Geisser correction automatically if sphericity is violated.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_anova_table</span>(sleep_aov)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Effect"],"name":[1],"type":["chr"],"align":["left"]},{"label":["DFn"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["DFd"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["F"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["p<.05"],"name":[6],"type":["chr"],"align":["left"]},{"label":["ges"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"month","2":"2","3":"198","4":"17.938","5":"6.92e-08","6":"*","7":"0.09","_rn_":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="post-hoc-comparisons" class="level3" data-number="4.3.6">
+<h3 data-number="4.3.6" class="anchored" data-anchor-id="post-hoc-comparisons"><span class="header-section-number">4.3.6</span> Post-hoc comparisons</h3>
+<p>Paired <em>t</em>-tests with a Bonferroni correction compare each pair of months:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sleep_long <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pairwise_t_test</span>(sleep <span class="sc">~</span> month, <span class="at">paired =</span> <span class="cn">TRUE</span>, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":[".y."],"name":[1],"type":["chr"],"align":["left"]},{"label":["group1"],"name":[2],"type":["chr"],"align":["left"]},{"label":["group2"],"name":[3],"type":["chr"],"align":["left"]},{"label":["n1"],"name":[4],"type":["int"],"align":["right"]},{"label":["n2"],"name":[5],"type":["int"],"align":["right"]},{"label":["statistic"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["p"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["p.adj"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["p.adj.signif"],"name":[10],"type":["chr"],"align":["left"]}],"data":[{"1":"sleep","2":"1","3":"2","4":"100","5":"100","6":"-5.4693039","7":"99","8":"3.397910e-07","9":"1.019373e-06","10":"****","_rn_":"1"},{"1":"sleep","2":"1","3":"3","4":"100","5":"100","6":"-4.8164501","7":"99","8":"5.263948e-06","9":"1.579184e-05","10":"****","_rn_":"2"},{"1":"sleep","2":"2","3":"3","4":"100","5":"100","6":"0.6911419","7":"99","8":"4.910939e-01","9":"1.000000e+00","10":"ns","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Participants slept significantly more in months 2 and 3 than in month 1. Months 2 and 3 did not differ.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03-moderation.html" class="pagination-link" aria-label="Moderation and Interaction Effects">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Moderation and Interaction Effects</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05-assumptions.html" class="pagination-link" aria-label="Checking Model Assumptions">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Checking Model Assumptions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

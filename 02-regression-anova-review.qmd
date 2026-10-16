@@ -1,0 +1,178 @@
+# Review of Regression and ANOVA {#sec-review}
+
+Nearly every method in this book extends one of two models you already know: analysis of variance (ANOVA) and multiple linear regression. This chapter reviews both in R so that later chapters can build on them. Along the way, it introduces a data-cleaning habit used throughout the book: never overwrite your raw data; create a clean copy instead.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(effectsize)
+library(modelsummary)
+```
+
+## ANOVA
+
+### The data
+
+The `systolic` data come from a small clinical study of 58 patients. Each patient received one of four drugs and had one of three diseases. The outcome, `systolic`, is the change in systolic blood pressure.
+
+```{r}
+systolic <- read_dta("data/systolic.dta")
+glimpse(systolic)
+```
+
+`drug` and `disease` are stored as numbers, but they are categories. `mutate()` creates new versions of them as factors so that R treats each value as a separate group. We save the result as a new data frame, `systolic_clean`, and leave the raw data untouched.
+
+```{r}
+systolic_clean <- systolic |>
+  mutate(
+    drug = as_factor(drug),
+    disease = as_factor(disease)
+  )
+```
+
+A boxplot shows how the outcome is distributed within each group:
+
+```{r}
+ggplot(systolic_clean, aes(x = drug, y = systolic)) +
+  geom_boxplot() +
+  labs(
+    x = "Drug",
+    y = "Change in systolic blood pressure",
+    caption = "N = 58."
+  )
+```
+
+### One-way ANOVA
+
+Does the mean change in blood pressure differ across the four drugs?
+
+```{r}
+anova1 <- aov(systolic ~ drug, data = systolic_clean)
+summary(anova1)
+```
+
+The *F* test is significant, so at least one group mean differs from the others. The group means show where the differences lie:
+
+```{r}
+systolic_clean |>
+  group_by(drug) |>
+  summarize(n = n(), mean = mean(systolic), sd = sd(systolic))
+```
+
+### Post-hoc tests
+
+The omnibus *F* test does not say *which* groups differ. Post-hoc tests compare every pair of groups while controlling the familywise error rate. The Bonferroni and Tukey methods are two common choices:
+
+```{r}
+pairwise.t.test(systolic_clean$systolic, systolic_clean$drug,
+                p.adjust.method = "bonferroni")
+
+TukeyHSD(anova1)
+```
+
+### Effect sizes
+
+A *p*-value tells you whether an effect is likely to be zero, not how large it is. Eta squared is the proportion of outcome variance explained by group membership. Omega squared estimates the same quantity with less upward bias, which matters most in small samples like this one.
+
+```{r}
+eta_squared(anova1, partial = FALSE)
+omega_squared(anova1, partial = FALSE)
+```
+
+### Two-way ANOVA
+
+Next, add `disease` as a second factor, along with the drug × disease interaction. The interaction tests whether the effect of a drug depends on which disease the patient has. (@sec-moderation returns to interactions in detail.)
+
+```{r}
+ggplot(systolic_clean, aes(x = drug, y = systolic, color = disease)) +
+  geom_boxplot() +
+  labs(
+    x = "Drug",
+    y = "Change in systolic blood pressure",
+    color = "Disease",
+    caption = "N = 58."
+  )
+```
+
+```{r}
+anova2 <- aov(systolic ~ drug * disease, data = systolic_clean)
+summary(anova2)
+```
+
+`drug * disease` is shorthand for `drug + disease + drug:disease`. Neither disease nor the interaction is significant: the drugs' effects on blood pressure do not appear to depend on the patient's disease. With more than one factor, report *partial* effect sizes. Each one gives the variance explained by that term, after removing the variance explained by the other terms.
+
+```{r}
+omega_squared(anova2, partial = TRUE)
+```
+
+## Multiple linear regression
+
+### The data
+
+The `nlsw88` data come from the 1988 wave of the National Longitudinal Survey of Young Women. It follows 2,246 women who were 34 to 46 years old at the time. We will model hourly `wage` as a function of job `tenure` (years in the current job), `age`, years of schooling (`grade`), and marital status.
+
+```{r}
+nlsw88 <- read_dta("data/nlsw88.dta")
+
+nlsw_clean <- nlsw88 |>
+  select(wage, tenure, age, grade, married) |>
+  mutate(married = as_factor(married)) |>
+  drop_na()
+
+glimpse(nlsw_clean)
+```
+
+`drop_na()` removes the 17 women missing tenure or schooling, so every model below is fit to the same sample. Comparing models fit to different samples can be misleading. (@sec-missing covers better ways to handle missing data.)
+
+### Simple linear regression
+
+Start with a scatterplot. The line added by `geom_smooth(method = "lm")` is the fitted regression line for the model we are about to estimate.
+
+```{r}
+ggplot(nlsw_clean, aes(x = tenure, y = wage)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(
+    x = "Years in current job",
+    y = "Hourly wage ($)",
+    caption = "Data: National Longitudinal Survey of Young Women, 1988."
+  )
+```
+
+```{r}
+model1 <- lm(wage ~ tenure, data = nlsw_clean)
+summary(model1)
+```
+
+Each additional year of tenure predicts an hourly wage about 19 cents higher.
+
+### Adding predictors
+
+```{r}
+model2 <- lm(wage ~ tenure + age + grade + married, data = nlsw_clean)
+summary(model2)
+```
+
+Each coefficient is now a *partial* effect: the predicted change in wage for a one-unit change in that predictor, with the other predictors held constant. The coefficient for `marriedmarried` compares married women to single women (the reference group) after adjusting for the other predictors.
+
+### Standardized coefficients
+
+Standardized (beta) coefficients put continuous predictors on the same scale (standard deviations). This makes it easier to compare the predictors' relative strength.
+
+```{r}
+standardize_parameters(model2)
+```
+
+### Summarizing models in a table
+
+`modelsummary()` puts several models side by side, which is the usual way to report nested regression models:
+
+```{r}
+modelsummary(
+  list("Model 1" = model1, "Model 2" = model2),
+  stars = TRUE,
+  gof_map = c("nobs", "r.squared", "adj.r.squared")
+)
+```
+
+The *R*² rises from Model 1 to Model 2, so schooling, age, and marital status explain wage variance beyond what tenure explains alone.

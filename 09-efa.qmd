@@ -1,0 +1,184 @@
+# Exploratory Factor Analysis {#sec-efa}
+
+Many constructs in education research, such as anxiety, motivation, or engagement, cannot be measured directly. Instead, we measure them with sets of survey items. Exploratory factor analysis (EFA) asks how many underlying dimensions (*factors*) explain the correlations among a set of items, and which items go with which factor.
+
+In this chapter, we start with reliability (Cronbach's alpha) for a single subscale. Then we use EFA to explore the structure of a full questionnaire.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(psych)
+library(corrplot)
+```
+
+## The data
+
+We use the SPSS Anxiety Questionnaire (SAQ) from Andy Field's *Discovering Statistics Using SPSS*. It has 23 items about anxiety related to statistics, computers, and mathematics, completed by 2,571 students. Each item is rated from 1 (strongly agree) to 5 (strongly disagree).
+
+```{r}
+saq <- read_dta("data/saq.dta")
+glimpse(saq)
+```
+
+### Reverse coding
+
+Most items are worded so that agreeing indicates more anxiety (for example, Q01: "Statistics makes me cry"). Q03, "Standard deviations excite me," is worded in the opposite direction. A correlation plot shows the problem: Q03 correlates negatively with most of the other items.
+
+```{r}
+#| fig-height: 7
+cor(saq) |>
+  corrplot(method = "color", type = "upper", tl.cex = 0.7)
+```
+
+We reverse-code Q03 by subtracting it from 6 (one more than the highest response) and drop the original:
+
+```{r}
+saq_clean <- saq |>
+  mutate(Q03R = 6 - Q03) |>
+  select(-Q03)
+```
+
+## Reliability
+
+### Cronbach's alpha
+
+Seven items ask about computers (Q06, Q07, Q10, Q13, Q14, Q15, and Q18). If we plan to combine them into a subscale, we should first check that they hang together. Cronbach's alpha is the most common index of internal consistency.
+
+```{r}
+computers <- saq_clean |>
+  select(Q06, Q07, Q10, Q13, Q14, Q15, Q18)
+
+psych::alpha(computers)
+```
+
+We write `psych::alpha()` to make sure R uses the `alpha()` function from `psych`, since other packages have functions with the same name. The raw alpha of 0.82 suggests good internal consistency. Values of 0.70 or higher are usually considered acceptable.
+
+The "Reliability if an item is dropped" table shows what alpha would be without each item. If dropping an item would *raise* alpha, that item may not fit the scale well.
+
+### Adding an item that does not fit
+
+What happens if we add Q23, "If I'm good at statistics my friends will think I'm a nerd"?
+
+```{r}
+computers2 <- saq_clean |>
+  select(Q06, Q07, Q10, Q13, Q14, Q15, Q18, Q23)
+
+psych::alpha(computers2)
+```
+
+Alpha drops to 0.76, and `psych` warns that Q23 is negatively correlated with the rest of the scale. The item-dropped table confirms that removing Q23 would restore alpha to 0.82.
+
+### Creating a scale score
+
+Once we are satisfied with a subscale, `scoreItems()` computes each student's mean across its items:
+
+```{r}
+keys <- list(computers = c("Q06", "Q07", "Q10", "Q13", "Q14", "Q15", "Q18"))
+
+scales <- scoreItems(keys, saq_clean, totals = FALSE)
+
+saq_scored <- saq_clean |>
+  bind_cols(as_tibble(scales$scores))
+
+describe(saq_scored$computers)
+```
+
+## Exploratory factor analysis
+
+Alpha tells us whether a set of items is internally consistent. It does not tell us whether the items measure one construct or several. For that, we turn to EFA.
+
+### Are the data suitable?
+
+Two checks tell us whether the items are correlated enough for factor analysis. The Kaiser-Meyer-Olkin (KMO) measure of sampling adequacy ranges from 0 to 1. Values above 0.80 are generally considered good. Bartlett's test of sphericity tests whether the correlation matrix differs from an identity matrix (no correlations at all). A significant result is what we want.
+
+```{r}
+KMO(saq_clean)$MSA
+
+cortest.bartlett(cor(saq_clean), n = nrow(saq_clean))
+```
+
+The KMO is 0.93, and Bartlett's test is significant. Both suggest the data are suitable for factor analysis.
+
+### How many factors?
+
+The most important decision in EFA is how many factors to retain. Several aids are available:
+
+- **Kaiser's rule**: retain components with eigenvalues greater than 1.
+- **The scree plot**: retain the factors before the plot levels off.
+- **Parallel analysis**: retain factors whose eigenvalues are larger than those from random data of the same size. This is generally the most accurate of the three.
+
+`fa.parallel()` draws a scree plot with parallel analysis results for both principal components (`PC`) and factors (`FA`):
+
+```{r}
+set.seed(663)
+fa.parallel(saq_clean, fm = "pa", fa = "both")
+```
+
+The aids do not agree perfectly. Parallel analysis suggests six factors, but four components. Four principal components also have eigenvalues greater than 1. Because two of the guides point to four, and because the item content covers four themes (statistics, computers, mathematics, and peers), we retain four. In your own work, the decision should weigh these statistical aids alongside theory and interpretability.
+
+### Extracting the factors
+
+`fa()` fits the factor model. We use principal axis factoring (`fm = "pa"`), a common extraction method that does not assume multivariate normality. We start without rotation:
+
+```{r}
+efa_unrotated <- fa(saq_clean, nfactors = 4, rotate = "none", fm = "pa")
+
+print(efa_unrotated$loadings, cutoff = 0.3)
+```
+
+A *loading* is the correlation between an item and a factor. We hide loadings below 0.3 to make the pattern easier to read. In the unrotated solution, nearly every item loads on the first factor. This is typical: unrotated factor analysis extracts as much variance as possible into the first factor, which makes the solution hard to interpret.
+
+### Rotation
+
+Rotation redistributes the variance across factors to approach *simple structure*, in which each item loads strongly on one factor and weakly on the others. Rotation does not change how well the model fits. It changes only how the variance is divided among the factors.
+
+There are two families of rotation:
+
+- **Orthogonal** rotations (such as varimax) keep the factors uncorrelated.
+- **Oblique** rotations (such as promax) allow the factors to correlate.
+
+```{r}
+efa_varimax <- fa(saq_clean, nfactors = 4, rotate = "varimax", fm = "pa")
+
+print(efa_varimax$loadings, cutoff = 0.3, sort = TRUE)
+```
+
+```{r}
+efa_promax <- fa(saq_clean, nfactors = 4, rotate = "promax", fm = "pa")
+
+print(efa_promax$loadings, cutoff = 0.3, sort = TRUE)
+```
+
+In both rotated solutions, the items sort into four groups. With promax, each item loads on only one factor, which is closer to simple structure. The four factors appear to correspond to:
+
+- fear of statistics (PA1)
+- fear of computers (PA3)
+- fear of mathematics (PA4)
+- fear of negative evaluation from peers (PA2)
+
+The promax solution also estimates the correlations among the factors:
+
+```{r}
+round(efa_promax$Phi, 2)
+```
+
+Several factors correlate at 0.5 or higher. In most social science settings, we would expect related constructs like these to be correlated. This suggests that an oblique rotation is the more realistic choice here.
+
+`fa.diagram()` shows the promax solution as a path diagram:
+
+```{r}
+#| fig-height: 7
+fa.diagram(efa_promax)
+```
+
+### Factor scores
+
+Finally, we can estimate each student's score on each factor:
+
+```{r}
+factor_scores <- as_tibble(efa_promax$scores)
+
+glimpse(factor_scores)
+```
+
+These scores can be used in later analyses, much like the scale score we created with `scoreItems()`. @sec-cfa takes the next step: testing whether a hypothesized factor structure fits the data.

@@ -1,0 +1,25 @@
+# Welcome {.unnumbered}
+
+This book collects the worked R examples for **EDUS 663: Applied Multivariate Statistics in Education** at Virginia Commonwealth University. Each chapter follows one course module and walks through a complete analysis: loading and preparing data, fitting the model, checking it, and interpreting the results.
+
+The chapters are designed to be read alongside the module readings (mostly from Hancock, Stapleton, & Mueller's *The Reviewer's Guide to Quantitative Methods in the Social Sciences*) and the lecture videos.
+
+## How to use this book
+
+- Every dataset used in the book is in the `data/` folder of the [GitHub repository](https://github.com/mikediam123/mvs-textbook). Download the folder and keep it next to your R project so the code runs as written.
+- Code is written in tidyverse style. Copy any chunk with the button in its top-right corner.
+- Most methods in this course extend regression and ANOVA. If a chapter feels like a big jump, revisit @sec-review first.
+
+## Packages
+
+The packages used across the book can be installed in one step:
+
+```{r}
+#| eval: false
+install.packages(c(
+  "tidyverse", "haven", "psych", "effectsize", "modelsummary",
+  "rstatix", "ggpubr", "ggeffects", "lmtest", "broom", "car",
+  "performance", "mice", "naniar", "corrplot", "factoextra",
+  "GPArotation", "lavaan", "semPlot"
+))
+```

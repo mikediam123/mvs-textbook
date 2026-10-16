@@ -1,0 +1,103 @@
+# Getting Started with R {#sec-getting-started}
+
+This chapter covers the basic workflow used throughout the book: loading packages, reading in a dataset, and exploring it with descriptive statistics, frequency tables, and plots.
+
+## Packages
+
+R's core functions are extended by *packages*: collections of functions written by other R users. A package must be installed once on your computer and then loaded each time you start a new R session. You can install packages from the **Packages** tab in RStudio, or with code:
+
+```{r}
+#| eval: false
+install.packages(c("tidyverse", "psych", "haven"))
+```
+
+We use three packages in this chapter:
+
+- `tidyverse` is a set of packages for working with and plotting data, including `dplyr` and `ggplot2`.
+- `psych` provides `describe()`, a quick way to get descriptive statistics.
+- `haven` reads data files saved by Stata, SPSS, and SAS.
+
+```{r}
+library(tidyverse)
+library(psych)
+library(haven)
+```
+
+## Loading data
+
+There are many ways to load data into R. Most datasets in this book are Stata files (`.dta`), which `read_dta()` from `haven` reads directly. The data for this chapter come from the 2012 General Social Survey (GSS), a long-running national survey of adults in the United States.
+
+```{r}
+gss <- read_dta("data/descriptive_gss.dta")
+```
+
+::: {.callout-note appearance="simple"}
+**Note:** In RStudio, you can also click a data file in the **Files** pane and choose **Import Dataset**. RStudio shows a preview of the code it will run. Copy that code into your script so the analysis can be reproduced.
+:::
+
+## A first look at the data
+
+`glimpse()` lists every variable with its type and first few values. (`View(gss)` opens the data in a spreadsheet-style window in RStudio, which is also useful.)
+
+```{r}
+glimpse(gss)
+```
+
+Each variable is shown as `<dbl+lbl>`, a number with a label attached. Stata files often store categorical variables this way: as numeric codes with value labels. `str()` shows the labels for a single variable. The `$` operator selects one variable from a data frame.
+
+```{r}
+str(gss$marital)
+```
+
+For `marital`, a code of 1 means married, 2 means widowed, and so on.
+
+## Descriptive statistics
+
+`describe()` from the `psych` package gives the sample size, mean, standard deviation, and range of every variable. The `fast = TRUE` option skips some of the less common statistics.
+
+```{r}
+describe(gss, fast = TRUE)
+```
+
+Note that `describe()` treats every variable as numeric. Its mean for `marital`, for instance, is not meaningful, because the codes are categories rather than amounts. For categorical variables, frequency tables are more useful.
+
+## Frequency tables
+
+`table()` counts how many cases fall into each category:
+
+```{r}
+table(gss$marital)
+table(gss$childs)
+```
+
+These counts are labeled with the numeric codes. To see the category labels instead, convert the variable to a factor with `as_factor()` from `haven`. We do this inside `count()`, the `tidyverse` equivalent of `table()`:
+
+```{r}
+gss |>
+  count(marital = as_factor(marital))
+```
+
+The `|>` symbol is the *pipe*. It passes the result on its left into the function on its right, so `gss |> count(...)` means "take `gss`, then count." Pipes let us chain several steps together in an order that reads from top to bottom. You will see them in nearly every chapter.
+
+## Plots with ggplot2
+
+`ggplot2` builds plots in layers. Every plot starts with `ggplot()`, which names the data and maps variables to parts of the plot (here, `childs` to the *x*-axis). A `geom` layer then draws the plot. Because `childs` takes only a few whole-number values, a bar chart (`geom_bar()`) works well:
+
+```{r}
+ggplot(data = gss, mapping = aes(x = childs)) +
+  geom_bar()
+```
+
+Each additional layer is added with `+`. Here, `labs()` adds axis labels and a caption, which is a good habit for any plot you plan to share:
+
+```{r}
+ggplot(data = gss, mapping = aes(x = childs)) +
+  geom_bar() +
+  labs(
+    x = "Number of children",
+    y = "Number of respondents",
+    caption = "Data: General Social Survey, 2012. N = 2,765."
+  )
+```
+
+Most respondents report between zero and three children, and the distribution has a long right tail. This kind of quick look at each variable's distribution is a useful first step in any analysis.

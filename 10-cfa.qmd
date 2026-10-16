@@ -1,0 +1,178 @@
+# Confirmatory Factor Analysis {#sec-cfa}
+
+In exploratory factor analysis (@sec-efa), the data tell us how many factors there are and which items load on each. Confirmatory factor analysis (CFA) reverses the logic. We specify the factor structure in advance, based on theory or prior research, and then test how well that structure fits the data.
+
+CFA is also the first step into structural equation modeling (SEM). We fit all of the models in this chapter with `lavaan`, the main R package for CFA and SEM, and draw them with `semPlot`.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(lavaan)
+library(semPlot)
+```
+
+## The data
+
+We return to the SPSS Anxiety Questionnaire (SAQ) from @sec-efa, with Q03 reverse-coded as before.
+
+```{r}
+saq <- read_dta("data/saq.dta")
+
+saq_clean <- saq |>
+  mutate(Q03R = 6 - Q03) |>
+  select(-Q03)
+```
+
+## A one-factor CFA
+
+We start with the seven computer anxiety items from @sec-efa.
+
+### Specifying the model
+
+`lavaan` models are written as text inside single quotes. The `=~` operator means "is measured by." The line below says that a latent factor called `computers` is measured by seven items.
+
+```{r}
+computers_model <- 'computers =~ Q06 + Q07 + Q10 + Q13 + Q14 + Q15 + Q18'
+
+computers_fit <- cfa(computers_model, data = saq_clean)
+summary(computers_fit)
+```
+
+### Setting the scale of the factor
+
+A latent variable has no natural units, so we have to give it a scale. By default, `lavaan` fixes the loading of the first item to 1. This is called the *marker variable* method, and it is why Q06 has a loading of 1.000 and no standard error. The other loadings are then on the same scale as Q06.
+
+Another option is to fix the factor's variance to 1 and estimate every loading freely. In `lavaan` syntax, `NA*` frees a parameter and `1*` fixes it to 1. The model below uses that approach. (`std.lv = TRUE` in `cfa()` is a shortcut that does the same thing.)
+
+```{r}
+#| eval: false
+computers_model_var <- '
+  computers =~ NA*Q06 + Q07 + Q10 + Q13 + Q14 + Q15 + Q18
+  computers ~~ 1*computers
+'
+```
+
+### Standardized estimates and model fit
+
+Adding `standardized = TRUE` to `summary()` adds standardized loadings in the `Std.all` column. These can be read like correlations between each item and the factor. Adding `fit.measures = TRUE` adds the fit statistics.
+
+```{r}
+summary(computers_fit, fit.measures = TRUE, standardized = TRUE)
+```
+
+All standardized loadings are positive and significant. Most are between about 0.5 and 0.75, and Q10 has the weakest loading (0.43).
+
+### Judging model fit
+
+CFA compares the covariances implied by the model to the covariances observed in the data. Several fit statistics summarize how close they are. Common guidelines are:
+
+| Statistic | What it measures | Guideline for good fit |
+|---|---|---|
+| χ² test | Exact fit | Non-significant (*p* > .05) |
+| CFI | Fit relative to a model with no correlations | ≥ 0.95 |
+| TLI | Like CFI, with a penalty for complexity | ≥ 0.95 |
+| RMSEA | Misfit per degree of freedom | ≤ 0.06 |
+| SRMR | Average difference between observed and implied correlations | ≤ 0.08 |
+
+The χ² test is significant, which is common in large samples like this one; it becomes sensitive to very small misfit. The other indices all meet the guidelines (CFI = 0.98, TLI = 0.97, RMSEA = 0.054, SRMR = 0.025). Taken together, the one-factor model appears to fit well. These guidelines are rules of thumb, not strict cutoffs, so report several indices and interpret them together.
+
+### Path diagrams
+
+`semPaths()` draws the model. `whatLabels = "std"` labels each path with its standardized estimate.
+
+```{r}
+semPaths(computers_fit, whatLabels = "std", edge.label.cex = 1.1)
+```
+
+In the diagram, the oval is the latent factor and the squares are the observed items. The curved arrows on the items are residual variances: the part of each item not explained by the factor.
+
+## Testing an additional item
+
+In @sec-efa, adding Q23 lowered the alpha of the computer subscale. What does CFA say?
+
+```{r}
+computers_model2 <- 'computers =~ Q06 + Q07 + Q10 + Q13 + Q14 + Q15 + Q18 + Q23'
+
+computers_fit2 <- cfa(computers_model2, data = saq_clean)
+summary(computers_fit2, fit.measures = TRUE, standardized = TRUE)
+```
+
+Somewhat surprisingly, the fit indices are about the same as before, and RMSEA even improves slightly. However, the standardized loading for Q23 is only −0.10. An item that barely relates to the factor adds degrees of freedom without adding much misfit, so overall fit can look fine. This is a good reminder to examine the loadings, not only the fit indices.
+
+## A second subscale
+
+Five items appear to measure fear of negative evaluation from peers (Q02, Q09, Q19, Q22, and Q23):
+
+```{r}
+peers_model <- 'peers =~ Q02 + Q09 + Q19 + Q22 + Q23'
+
+peers_fit <- cfa(peers_model, data = saq_clean)
+summary(peers_fit, fit.measures = TRUE, standardized = TRUE)
+```
+
+Fit is acceptable but weaker than for the computers subscale (CFI = 0.96, TLI = 0.92, RMSEA = 0.056). The loadings are also lower, ranging from about 0.3 to 0.6.
+
+## A multi-factor CFA
+
+A CFA can include several factors at once. By default, `lavaan` lets the factors correlate. Here, we combine the computer, peer, and mathematics subscales:
+
+```{r}
+three_factor_model <- '
+  computers =~ Q06 + Q07 + Q10 + Q13 + Q14 + Q15 + Q18
+  peers     =~ Q02 + Q09 + Q19 + Q22 + Q23
+  math      =~ Q08 + Q11 + Q17
+'
+
+three_factor_fit <- cfa(three_factor_model, data = saq_clean)
+summary(three_factor_fit, fit.measures = TRUE, standardized = TRUE)
+```
+
+The three-factor model fits reasonably well (CFI = 0.94, TLI = 0.93, RMSEA = 0.053, SRMR = 0.041). The factor covariances, in the `Covariances` section, show that computer anxiety and math anxiety are positively correlated (0.65). The peer factor correlates negatively with the other two. This sign reflects how the peer items are worded and scored, so it is worth checking item wording before interpreting it.
+
+```{r}
+#| fig-height: 6
+semPaths(three_factor_fit, whatLabels = "std", edge.label.cex = 0.8,
+         sizeMan = 5)
+```
+
+## Does a single factor fit all items?
+
+Could all 23 items measure a single general anxiety factor? We can test this directly:
+
+```{r}
+one_factor_model <- '
+  anxiety =~ Q01 + Q02 + Q03R + Q04 + Q05 + Q06 + Q07 + Q08 + Q09 + Q10 +
+             Q11 + Q12 + Q13 + Q14 + Q15 + Q16 + Q17 + Q18 + Q19 + Q20 +
+             Q21 + Q22 + Q23
+'
+
+one_factor_fit <- cfa(one_factor_model, data = saq_clean)
+
+fitMeasures(one_factor_fit, c("chisq", "df", "pvalue", "cfi", "tli",
+                              "rmsea", "srmr"))
+```
+
+`fitMeasures()` returns only the statistics we ask for. The one-factor model fits poorly (CFI = 0.78, RMSEA = 0.085). This supports the multidimensional structure we found in @sec-efa.
+
+## Modification indices
+
+Modification indices estimate how much the χ² statistic would drop if we freed a parameter that is currently fixed, such as a covariance between two item residuals.
+
+```{r}
+modificationIndices(computers_fit, sort. = TRUE, minimum.value = 10)
+```
+
+The largest index is for a residual covariance between Q15 ("Computers are out to get me") and Q18 ("SPSS always crashes when I try to use it"). We could add it with the `~~` operator:
+
+```{r}
+computers_model3 <- '
+  computers =~ Q06 + Q07 + Q10 + Q13 + Q14 + Q15 + Q18
+  Q15 ~~ Q18
+'
+
+computers_fit3 <- cfa(computers_model3, data = saq_clean)
+
+fitMeasures(computers_fit3, c("chisq", "df", "cfi", "tli", "rmsea", "srmr"))
+```
+
+Fit improves, as it always will when we free a parameter. However, modification indices should be used with caution. A CFA is meant to test a model specified in advance. If we keep adding the changes that modification indices suggest, we risk fitting the model to the quirks of this particular sample, and the results may not generalize. Thus, it is best to treat modification indices as a description of where a model fits poorly, much like examining residuals in regression. Add a parameter only when there is a substantive reason for it (for example, two items with very similar wording), and report any changes you make.

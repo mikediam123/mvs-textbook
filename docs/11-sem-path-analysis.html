@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>11&nbsp; Structural Equation Modeling I: Path Analysis and Latent Variables – Applied Multivariate Statistics in Education</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./12-sem-mediation.html" rel="next">
+<link href="./10-cfa.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-18a86156fa881a144d2995565f3cba36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-sem-path-analysis.html">Structural Equation Modeling</a></li><li class="breadcrumb-item"><a href="./11-sem-path-analysis.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Structural Equation Modeling I: Path Analysis and Latent Variables</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Applied Multivariate Statistics in Education</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/mikediam123/mvs-textbook" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-anova-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Review of Regression and ANOVA</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extending the General Linear Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-moderation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Moderation and Interaction Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-repeated-measures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">ANCOVA and Repeated Measures ANOVA</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Checking Model Assumptions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-missing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Missing Data and Multiple Imputation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Classification and Measurement</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Cluster Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-efa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exploratory Factor Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Confirmatory Factor Analysis</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Structural Equation Modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-sem-path-analysis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Structural Equation Modeling I: Path Analysis and Latent Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-sem-mediation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Structural Equation Modeling II: Mediation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link active" data-scroll-target="#the-data"><span class="header-section-number">11.1</span> The data</a>
+  <ul class="collapse">
+  <li><a href="#handling-missing-data" id="toc-handling-missing-data" class="nav-link" data-scroll-target="#handling-missing-data"><span class="header-section-number">11.1.1</span> Handling missing data</a></li>
+  </ul></li>
+  <li><a href="#path-analysis" id="toc-path-analysis" class="nav-link" data-scroll-target="#path-analysis"><span class="header-section-number">11.2</span> Path analysis</a>
+  <ul class="collapse">
+  <li><a href="#simple-regression" id="toc-simple-regression" class="nav-link" data-scroll-target="#simple-regression"><span class="header-section-number">11.2.1</span> Simple regression</a></li>
+  <li><a href="#independent-samples-t-test" id="toc-independent-samples-t-test" class="nav-link" data-scroll-target="#independent-samples-t-test"><span class="header-section-number">11.2.2</span> Independent samples <em>t</em>-test</a></li>
+  <li><a href="#one-way-anova" id="toc-one-way-anova" class="nav-link" data-scroll-target="#one-way-anova"><span class="header-section-number">11.2.3</span> One-way ANOVA</a></li>
+  <li><a href="#multiple-regression" id="toc-multiple-regression" class="nav-link" data-scroll-target="#multiple-regression"><span class="header-section-number">11.2.4</span> Multiple regression</a></li>
+  </ul></li>
+  <li><a href="#identification" id="toc-identification" class="nav-link" data-scroll-target="#identification"><span class="header-section-number">11.3</span> Identification</a>
+  <ul class="collapse">
+  <li><a href="#an-under-identified-model" id="toc-an-under-identified-model" class="nav-link" data-scroll-target="#an-under-identified-model"><span class="header-section-number">11.3.1</span> An under-identified model</a></li>
+  <li><a href="#an-over-identified-model" id="toc-an-over-identified-model" class="nav-link" data-scroll-target="#an-over-identified-model"><span class="header-section-number">11.3.2</span> An over-identified model</a></li>
+  </ul></li>
+  <li><a href="#a-full-structural-equation-model" id="toc-a-full-structural-equation-model" class="nav-link" data-scroll-target="#a-full-structural-equation-model"><span class="header-section-number">11.4</span> A full structural equation model</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-sem-path-analysis.html">Structural Equation Modeling</a></li><li class="breadcrumb-item"><a href="./11-sem-path-analysis.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Structural Equation Modeling I: Path Analysis and Latent Variables</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sem1" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Structural Equation Modeling I: Path Analysis and Latent Variables</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Structural equation modeling (SEM) is a general framework that includes many of the models in this book as special cases. In this chapter, we first show that familiar analyses (regression, the <em>t</em>-test, and ANOVA) can all be written as <em>path models</em> in <code>lavaan</code>. Then we combine a measurement model, like the CFAs in <a href="10-cfa.html" class="quarto-xref"><span>Chapter 10</span></a>, with a regression model to estimate a full SEM.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lavaan)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semPlot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="the-data" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="the-data"><span class="header-section-number">11.1</span> The data</h2>
+<p>We return to the ELS:2002 data from <a href="06-logistic-regression.html" class="quarto-xref"><span>Chapter 6</span></a>. We keep a small set of variables and give them readable names. <code>transmute()</code> creates and keeps only the variables we name.</p>
+<ul>
+<li><code>hrsread</code>: hours per week spent reading outside of school</li>
+<li><code>absorbmath</code>: “Gets totally absorbed in mathematics”</li>
+<li><code>absorbread</code>: “Gets totally absorbed in reading”</li>
+<li><code>importmath</code>: “Mathematics is important”</li>
+<li><code>comptest</code>: standardized math and reading test score</li>
+<li><code>ap</code>: ever took part in an Advanced Placement program (1 = yes, 0 = no)</li>
+<li><code>sesq</code>: SES quartile</li>
+</ul>
+<p>The three attitude items are rated from 1 (strongly agree) to 4 (strongly disagree), so we reverse-code them (5 minus the score). Higher values then mean more absorption and importance. As in <a href="06-logistic-regression.html" class="quarto-xref"><span>Chapter 6</span></a>, negative values are missing data codes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>els <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/ELS_Logistic.dta"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>els_clean <span class="ot">&lt;-</span> els <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zap_labels</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(bys43, bys87a, bys87e, bys87f, bytxcstd, bys33a, byses1qu),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                <span class="sc">~</span> <span class="fu">if_else</span>(.x <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="cn">NA</span>, .x))) <span class="sc">|&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">hrsread =</span> bys43,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">absorbmath =</span> <span class="dv">5</span> <span class="sc">-</span> bys87a,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">absorbread =</span> <span class="dv">5</span> <span class="sc">-</span> bys87e,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">importmath =</span> <span class="dv">5</span> <span class="sc">-</span> bys87f,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">comptest =</span> bytxcstd,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">ap =</span> bys33a,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">sesq =</span> <span class="fu">factor</span>(byses1qu, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Lowest"</span>, <span class="st">"Second"</span>, <span class="st">"Third"</span>, <span class="st">"Highest"</span>))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(comptest))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(els_clean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    hrsread         absorbmath      absorbread      importmath   
+ Min.   : 0.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.: 0.000   1st Qu.:2.000   1st Qu.:2.000   1st Qu.:2.000  
+ Median : 1.000   Median :3.000   Median :3.000   Median :3.000  
+ Mean   : 2.722   Mean   :2.509   Mean   :2.732   Mean   :2.486  
+ 3rd Qu.: 3.000   3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:3.000  
+ Max.   :21.000   Max.   :4.000   Max.   :4.000   Max.   :4.000  
+ NAs    :1333     NAs    :4152    NAs    :4300    NAs    :4134   
+    comptest           ap              sesq     
+ Min.   :20.91   Min.   :0.0000   Lowest :3608  
+ 1st Qu.:43.79   1st Qu.:0.0000   Second :3604  
+ Median :50.97   Median :0.0000   Third  :3731  
+ Mean   :50.66   Mean   :0.1823   Highest:4301  
+ 3rd Qu.:57.81   3rd Qu.:0.0000   NAs    : 648  
+ Max.   :81.04   Max.   :1.0000                 
+                 NAs    :1524                   </code></pre>
+</div>
+</div>
+<p>We keep only students with a test score, since it is the outcome in most models below. Many students are still missing one or more predictors.</p>
+<section id="handling-missing-data" class="level3" data-number="11.1.1">
+<h3 data-number="11.1.1" class="anchored" data-anchor-id="handling-missing-data"><span class="header-section-number">11.1.1</span> Handling missing data</h3>
+<p>In <code>lavaan</code>, <code>missing = "ml"</code> uses full information maximum likelihood (FIML), which keeps every case and uses all of the data each case has (see <a href="07-missing-data.html" class="quarto-xref"><span>Chapter 7</span></a>). By default, FIML applies only to the outcome variables. Adding <code>fixed.x = FALSE</code> extends it to the predictors. We also use <code>estimator = "MLR"</code>, which gives standard errors that are robust to non-normal data. We use these three options throughout the chapter.</p>
+</section>
+</section>
+<section id="path-analysis" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="path-analysis"><span class="header-section-number">11.2</span> Path analysis</h2>
+<section id="simple-regression" class="level3" data-number="11.2.1">
+<h3 data-number="11.2.1" class="anchored" data-anchor-id="simple-regression"><span class="header-section-number">11.2.1</span> Simple regression</h3>
+<p>A path model uses the same <code>~</code> operator as <code>lm()</code>. The line below regresses the test score on reading absorption:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="st">'comptest ~ absorbread'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">sem</span>(model1, <span class="at">data =</span> els_clean,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">estimator =</span> <span class="st">"MLR"</span>, <span class="at">missing =</span> <span class="st">"ml"</span>, <span class="at">fixed.x =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 13 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                         5
+
+  Number of observations                         15892
+  Number of missing patterns                         2
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 0.000       0.000
+  Degrees of freedom                                 0           0
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  comptest ~                                                            
+    absorbread        2.653    0.097   27.378    0.000    2.653    0.244
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .comptest         43.473    0.267  162.527    0.000   43.473    4.400
+    absorbread        2.709    0.008  320.759    0.000    2.709    2.975
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .comptest         91.776    0.974   94.219    0.000   91.776    0.940
+    absorbread        0.829    0.009   93.329    0.000    0.829    1.000</code></pre>
+</div>
+</div>
+<p>Compare this to the same model fit with <code>lm()</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(comptest <span class="sc">~</span> absorbread, <span class="at">data =</span> els_clean)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = comptest ~ absorbread, data = els_clean)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-31.4772  -6.3428   0.4107   6.8612  29.4166 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 44.61550    0.27873  160.07   &lt;2e-16 ***
+absorbread   2.59793    0.09679   26.84   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 9.481 on 11590 degrees of freedom
+  (4300 observations deleted due to missingness)
+Multiple R-squared:  0.05853,   Adjusted R-squared:  0.05844 
+F-statistic: 720.5 on 1 and 11590 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nobs</span>(lm1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11592</code></pre>
+</div>
+</div>
+<p>The coefficients are very close. The key difference is the sample: <code>lm()</code> drops every student missing <code>absorbread</code>, while the path model keeps all of them. With only one predictor, the standardized coefficient (<code>Std.all</code>) is the correlation between the two variables.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(fit1, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">edge.label.cex =</span> <span class="fl">1.2</span>, <span class="at">sizeMan =</span> <span class="dv">10</span>,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">intercepts =</span> <span class="cn">FALSE</span>, <span class="at">nCharNodes =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="11-sem-path-analysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="independent-samples-t-test" class="level3" data-number="11.2.2">
+<h3 data-number="11.2.2" class="anchored" data-anchor-id="independent-samples-t-test"><span class="header-section-number">11.2.2</span> Independent samples <em>t</em>-test</h3>
+<p>A <em>t</em>-test is a regression with one binary predictor. Here, we compare math absorption for students who had and had not taken part in an AP program:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="st">'absorbmath ~ ap'</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">sem</span>(model2, <span class="at">data =</span> els_clean,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">estimator =</span> <span class="st">"MLR"</span>, <span class="at">missing =</span> <span class="st">"ml"</span>, <span class="at">fixed.x =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 11 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                         5
+
+                                                  Used       Total
+  Number of observations                         14499       15892
+  Number of missing patterns                         3            
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 0.000       0.000
+  Degrees of freedom                                 0           0
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  absorbmath ~                                        
+    ap                0.094    0.019    4.896    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .absorbmath        2.491    0.008  300.645    0.000
+    ap                0.182    0.003   56.607    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .absorbmath        0.652    0.007   88.138    0.000
+    ap                0.149    0.002   72.854    0.000</code></pre>
+</div>
+</div>
+<p>The intercept (in the <code>Intercepts</code> section) is the mean for students with <code>ap = 0</code>. The coefficient for <code>ap</code> is the difference between the two group means. AP participants reported slightly more absorption in math.</p>
+</section>
+<section id="one-way-anova" class="level3" data-number="11.2.3">
+<h3 data-number="11.2.3" class="anchored" data-anchor-id="one-way-anova"><span class="header-section-number">11.2.3</span> One-way ANOVA</h3>
+<p>A one-way ANOVA is a regression with a set of dummy variables. In <code>lavaan</code>, we create the dummies ourselves. We leave out the lowest quartile, which makes it the reference group.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>els_clean <span class="ot">&lt;-</span> els_clean <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ses2 =</span> <span class="fu">if_else</span>(sesq <span class="sc">==</span> <span class="st">"Second"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ses3 =</span> <span class="fu">if_else</span>(sesq <span class="sc">==</span> <span class="st">"Third"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ses4 =</span> <span class="fu">if_else</span>(sesq <span class="sc">==</span> <span class="st">"Highest"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="st">'importmath ~ ses2 + ses3 + ses4'</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">sem</span>(model3, <span class="at">data =</span> els_clean,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">estimator =</span> <span class="st">"MLR"</span>, <span class="at">missing =</span> <span class="st">"ml"</span>, <span class="at">fixed.x =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 34 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        14
+
+                                                  Used       Total
+  Number of observations                         15244       15892
+  Number of missing patterns                         2            
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 0.000       0.000
+  Degrees of freedom                                 0           0
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  importmath ~                                        
+    ses2             -0.036    0.025   -1.489    0.137
+    ses3             -0.075    0.024   -3.125    0.002
+    ses4             -0.041    0.023   -1.775    0.076
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  ses2 ~~                                             
+    ses3             -0.058    0.001  -59.434    0.000
+    ses4             -0.067    0.001  -63.555    0.000
+  ses3 ~~                                             
+    ses4             -0.069    0.001  -64.803    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .importmath        2.526    0.018  144.091    0.000
+    ses2              0.236    0.003   68.701    0.000
+    ses3              0.245    0.003   70.286    0.000
+    ses4              0.282    0.004   77.404    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .importmath        0.791    0.008   96.762    0.000
+    ses2              0.181    0.002   99.513    0.000
+    ses3              0.185    0.002  103.984    0.000
+    ses4              0.203    0.002  127.527    0.000</code></pre>
+</div>
+</div>
+<p>Each coefficient is the difference in mean math importance between that quartile and the lowest. Because <code>if_else()</code> returns <code>NA</code> when <code>sesq</code> is missing, students with unknown SES stay missing rather than being placed in the reference group by mistake.</p>
+</section>
+<section id="multiple-regression" class="level3" data-number="11.2.4">
+<h3 data-number="11.2.4" class="anchored" data-anchor-id="multiple-regression"><span class="header-section-number">11.2.4</span> Multiple regression</h3>
+<p>A multiple regression adds more predictors to the same line:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="st">  comptest ~ hrsread + absorbmath + absorbread + importmath + ap +</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="st">             ses2 + ses3 + ses4</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>fit4 <span class="ot">&lt;-</span> <span class="fu">sem</span>(model4, <span class="at">data =</span> els_clean,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">estimator =</span> <span class="st">"MLR"</span>, <span class="at">missing =</span> <span class="st">"ml"</span>, <span class="at">fixed.x =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit4, <span class="at">standardized =</span> <span class="cn">TRUE</span>, <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 106 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        54
+
+  Number of observations                         15892
+  Number of missing patterns                        28
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                 0.000       0.000
+  Degrees of freedom                                 0           0
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  comptest ~                                                            
+    hrsread           0.008    0.023    0.329    0.742    0.008    0.003
+    absorbmath       -0.531    0.114   -4.641    0.000   -0.531   -0.043
+    absorbread        1.936    0.098   19.663    0.000    1.936    0.178
+    importmath        0.621    0.102    6.057    0.000    0.621    0.056
+    ap                3.898    0.193   20.198    0.000    3.898    0.152
+    ses2              3.585    0.205   17.466    0.000    3.585    0.154
+    ses3              6.318    0.204   30.938    0.000    6.318    0.275
+    ses4             10.477    0.198   52.877    0.000   10.477    0.477
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  hrsread ~~                                                            
+    absorbmath        0.059    0.031    1.886    0.059    0.059    0.019
+    absorbread        1.275    0.035   36.379    0.000    1.275    0.365
+    importmath        0.184    0.033    5.597    0.000    0.184    0.054
+    ap                0.071    0.013    5.523    0.000    0.071    0.048
+    ses2             -0.018    0.014   -1.285    0.199   -0.018   -0.011
+    ses3              0.006    0.014    0.471    0.637    0.006    0.004
+    ses4              0.015    0.014    1.078    0.281    0.015    0.009
+  absorbmath ~~                                                         
+    absorbread        0.106    0.008   13.338    0.000    0.106    0.144
+    importmath        0.330    0.008   41.821    0.000    0.330    0.458
+    ap                0.014    0.003    4.808    0.000    0.014    0.044
+    ses2             -0.008    0.003   -2.542    0.011   -0.008   -0.024
+    ses3             -0.007    0.003   -2.051    0.040   -0.007   -0.019
+    ses4             -0.000    0.003   -0.095    0.924   -0.000   -0.001
+  absorbread ~~                                                         
+    importmath        0.112    0.009   12.956    0.000    0.112    0.139
+    ap                0.029    0.003    9.135    0.000    0.029    0.082
+    ses2             -0.028    0.004   -7.770    0.000   -0.028   -0.072
+    ses3              0.006    0.004    1.590    0.112    0.006    0.014
+    ses4              0.044    0.004   12.213    0.000    0.044    0.108
+  importmath ~~                                                         
+    ap                0.020    0.003    6.253    0.000    0.020    0.057
+    ses2              0.001    0.004    0.163    0.871    0.001    0.002
+    ses3             -0.009    0.003   -2.557    0.011   -0.009   -0.023
+    ses4             -0.001    0.004   -0.178    0.859   -0.001   -0.002
+  ap ~~                                                                 
+    ses2             -0.008    0.001   -6.092    0.000   -0.008   -0.048
+    ses3              0.000    0.001    0.069    0.945    0.000    0.001
+    ses4              0.019    0.002   12.487    0.000    0.019    0.112
+  ses2 ~~                                                               
+    ses3             -0.058    0.001  -59.436    0.000   -0.058   -0.317
+    ses4             -0.067    0.001  -63.582    0.000   -0.067   -0.349
+  ses3 ~~                                                               
+    ses4             -0.069    0.001  -64.939    0.000   -0.069   -0.358
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .comptest         39.133    0.376  104.185    0.000   39.133    3.961
+    hrsread           2.712    0.032   85.071    0.000    2.712    0.705
+    absorbmath        2.512    0.007  335.336    0.000    2.512    3.103
+    absorbread        2.709    0.008  325.226    0.000    2.709    2.981
+    importmath        2.481    0.008  300.984    0.000    2.481    2.789
+    ap                0.181    0.003   56.655    0.000    0.181    0.470
+    ses2              0.237    0.003   68.736    0.000    0.237    0.557
+    ses3              0.245    0.003   70.289    0.000    0.245    0.569
+    ses4              0.282    0.004   77.655    0.000    0.282    0.627
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .comptest         73.380    0.851   86.212    0.000   73.380    0.752
+    hrsread          14.778    0.385   38.428    0.000   14.778    1.000
+    absorbmath        0.655    0.007   88.055    0.000    0.655    1.000
+    absorbread        0.826    0.009   93.228    0.000    0.826    1.000
+    importmath        0.792    0.008   96.931    0.000    0.792    1.000
+    ap                0.149    0.002   72.910    0.000    0.149    1.000
+    ses2              0.180    0.002   99.535    0.000    0.180    1.000
+    ses3              0.185    0.002  103.989    0.000    0.185    1.000
+    ses4              0.202    0.002  127.747    0.000    0.202    1.000
+
+R-Square:
+                   Estimate
+    comptest          0.248</code></pre>
+</div>
+</div>
+<p>All of these models have zero degrees of freedom. Each estimates every possible path among its variables, so it is <em>just-identified</em> and fits the data perfectly. That is why there are no fit statistics to interpret. Fit statistics become meaningful once a model places constraints on the data, as the latent variable models below do.</p>
+</section>
+</section>
+<section id="identification" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="identification"><span class="header-section-number">11.3</span> Identification</h2>
+<p>Before we add latent variables, we need to know whether a model can be estimated at all. A model is <em>identified</em> when there is enough information in the data to estimate every parameter. The information is the number of unique variances and covariances among the observed variables. With <em>p</em> variables, there are <em>p</em>(<em>p</em> + 1)/2 of them. The degrees of freedom equal this number minus the number of parameters estimated.</p>
+<ul>
+<li><strong>Under-identified</strong> (<em>df</em> &lt; 0): more parameters than information. The model cannot be estimated.</li>
+<li><strong>Just-identified</strong> (<em>df</em> = 0): the model can be estimated but fits perfectly, so fit cannot be tested.</li>
+<li><strong>Over-identified</strong> (<em>df</em> &gt; 0): the model can be estimated, and its fit can be tested.</li>
+</ul>
+<section id="an-under-identified-model" class="level3" data-number="11.3.1">
+<h3 data-number="11.3.1" class="anchored" data-anchor-id="an-under-identified-model"><span class="header-section-number">11.3.1</span> An under-identified model</h3>
+<p>A factor measured by only two items is under-identified on its own:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model5 <span class="ot">&lt;-</span> <span class="st">'Read =~ hrsread + absorbread'</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fit5 <span class="ot">&lt;-</span> <span class="fu">sem</span>(model5, <span class="at">data =</span> els_clean, <span class="at">estimator =</span> <span class="st">"MLR"</span>, <span class="at">missing =</span> <span class="st">"ml"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: lavaan-&gt;lav_data_full():  
+   some cases are empty and will be ignored: 24 44 54 57 66 84 97 106 114 115 
+   125 126 132 158 169 177 239 263 267 369 428 487 510 513 536 554 564 568 
+   601 624 651 666 718 761 766 767 768 769 770 771 784 786 794 800 803 833 
+   890 921 946 960 974 993 995 1000 1003 1004 1009 1020 1028 1066 1103 1115 
+   1219 1228 1241 1307 1363 1401 1407 1418 1421 1426 1435 1438 1439 1446 1448 
+   1458 1467 1470 1473 1492 1504 1506 1590 1596 1614 1620 1662 1665 1669 1729 
+   1730 1735 1744 1745 1749 1902 1909 1915 1916 1945 1969 1974 1978 2018 2065 
+   2094 2104 2106 2136 2144 2172 2202 2238 2243 2256 2264 2287 2312 2335 2337 
+   2340 2363 2405 2522 2551 2556 2591 2611 2630 2692 2693 2699 2703 2771 2777 
+   2810 2813 2825 2830 2862 2874 2875 2904 2945 2959 2968 2990 3005 3025 3036 
+   3068 3069 3072 3075 3084 3106 3152 3153 3197 3240 3491 3598 3601 3637 3646 
+   3681 3725 3738 3742 3789 3819 3824 3826 3830 3882 3895 3900 3901 3907 3945 
+   3948 3952 3977 4003 4006 4108 4121 4128 4129 4157 4171 4188 4209 4247 4248 
+   4254 4262 4302 4304 4340 4358 4381 4389 4391 4395 4400 4430 4464 4476 4511 
+   4518 4525 4527 4528 4530 4534 4535 4538 4547 4563 4572 4582 4590 4592 4604 
+   4616 4622 4627 4628 4639 4687 4688 4689 4695 4700 4705 4709 4714 4731 4785 
+   4854 4959 4982 5033 5038 5042 5072 5115 5149 5170 5171 5179 5225 5228 5245 
+   5249 5309 5310 5311 5355 5359 5364 5368 5381 5385 5388 5413 5414 5472 5477 
+   5498 5500 5504 5505 5507 5509 5516 5518 5579 5591 5648 5656 5740 5761 5799 
+   5827 5836 5866 5923 5960 5993 6075 6081 6096 6100 6102 6107 6123 6157 6158 
+   6223 6227 6265 6280 6298 6313 6331 6356 6359 6376 6381 6382 6383 6388 6422 
+   6446 6496 6503 6522 6537 6538 6540 6573 6588 6590 6600 6601 6604 6632 6635 
+   6638 6675 6678 6717 6754 6760 6845 6846 6848 6852 6853 6855 6857 6861 6863 
+   6869 6913 6917 6934 7021 7024 7026 7032 7034 7037 7044 7118 7119 7146 7267 
+   7273 7274 7281 7332 7337 7351 7360 7366 7371 7384 7426 7428 7443 7449 7524 
+   7527 7542 7545 7550 7574 7581 7596 7600 7605 7610 7637 7680 7701 7710 7730 
+   7740 7774 7790 7835 7837 7846 7858 7863 7865 7866 7872 7873 7877 7882 7888 
+   7889 7902 7911 7921 7926 7928 7934 7950 7969 7975 7978 7979 7985 7989 7992 
+   7996 7997 7998 7999 8003 8005 8008 8027 8032 8033 8035 8038 8047 8051 8055 
+   8060 8061 8062 8070 8071 8076 8077 8078 8081 8082 8084 8085 8100 8109 8137 
+   8164 8165 8172 8173 8178 8184 8192 8194 8197 8205 8225 8232 8240 8277 8279 
+   8295 8312 8330 8336 8373 8394 8397 8406 8426 8453 8468 8476 8523 8524 8537 
+   8540 8550 8555 8557 8559 8560 8561 8568 8626 8629 8630 8646 8652 8664 8670 
+   8673 8676 8677 8680 8682 8697 8701 8720 8770 8772 8776 8779 8783 8813 8819 
+   8832 8833 8835 8839 8843 8848 8886 8911 8913 8946 8959 8983 9011 9016 9026 
+   9050 9052 9062 9063 9081 9086 9115 9124 9135 9136 9137 9142 9160 9168 9174 
+   9177 9228 9241 9243 9271 9273 9274 9275 9285 9288 9292 9296 9331 9336 9343 
+   9373 9384 9392 9410 9414 9427 9452 9467 9488 9490 9500 9539 9564 9581 9586 
+   9609 9611 9622 9684 9694 9705 9715 9716 9748 9783 9784 9785 9786 9788 9789 
+   9790 9793 9795 9798 9800 9809 9810 9815 9817 9821 9824 9830 9832 9834 9837 
+   9840 9841 9844 9846 9863 9878 9913 9923 9929 9933 9934 9937 9940 9948 9949 
+   9953 9964 9976 9996 10000 10011 10018 10028 10052 10061 10090 10111 10175 
+   10192 10225 10259 10266 10294 10297 10322 10332 10345 10346 10350 10442 
+   10444 10452 10454 10456 10470 10473 10476 10477 10479 10482 10486 10488 
+   10489 10490 10491 10496 10497 10498 10500 10503 10513 10524 10526 10531 
+   10534 10536 10537 10543 10544 10551 10558 10562 10571 10572 10573 10576 
+   10577 10578 10584 10585 10588 10589 10593 10598 10604 10605 10606 10607 
+   10608 10613 10614 10617 10620 10622 10623 10625 10629 10632 10633 10634 
+   10635 10636 10638 10639 10640 10641 10642 10645 10646 10647 10656 10670 
+   10705 10706 10707 10708 10709 10710 10712 10716 10721 10724 10726 10727 
+   10730 10737 10738 10744 10747 10752 10753 10754 10761 10783 10785 10799 
+   10819 10861 10863 10873 10875 10876 10879 10893 10899 10903 10904 10907 
+   10911 10931 10940 10942 10943 10945 10946 10950 10952 10953 10983 11001 
+   11002 11010 11011 11013 11055 11062 11077 11183 11192 11212 11221 11222 
+   11228 11276 11337 11496 11507 11510 11512 11557 11565 11567 11570 11580 
+   11587 11593 11594 11630 11644 11669 11675 11676 11678 11682 11699 11702 
+   11703 11704 11782 11789 11791 11792 11793 11796 11798 11799 11802 11804 
+   11805 11808 11815 11863 11868 11872 11875 11881 11889 11899 11909 11910 
+   11941 11961 11964 11968 11992 12008 12024 12041 12046 12049 12058 12060 
+   12067 12081 12086 12088 12093 12109 12111 12112 12129 12142 12148 12157 
+   12165 12197 12220 12225 12231 12252 12275 12286 12292 12297 12303 12315 
+   12319 12320 12323 12371 12399 12401 12463 12466 12477 12497 12506 12514 
+   12523 12573 12599 12628 12636 12638 12646 12655 12664 12741 12770 12776 
+   12835 12850 12877 12950 12972 13128 13138 13146 13188 13207 13230 13234 
+   13273 13278 13316 13438 13467 13475 13480 13539 13553 13566 13598 13602 
+   13622 13626 13700 13837 13856 13857 13871 13876 13879 13885 13890 13894 
+   13896 13901 13905 13910 13921 13928 13980 13988 13996 14045 14046 14052 
+   14054 14059 14063 14064 14117 14169 14198 14214 14325 14340 14349 14357 
+   14367 14494 14517 14518 14522 14534 14544 14546 14552 14557 14582 14588 
+   14592 14594 14596 14597 14600 14608 14645 14667 14670 14671 14674 14680 
+   14687 14689 14698 14708 14713 14720 14734 14737 14760 14773 14784 14798 
+   14802 14840 14850 14916 14925 14931 14941 14986 14990 15044 15045 15046 
+   15047 15048 15049 15052 15053 15055 15057 15058 15059 15060 15061 15062 
+   15063 15064 15065 15066 15068 15069 15083 15129 15146 15154 15258 15259 
+   15260 15283 15294 15296 15308 15311 15349 15367 15370 15374 15398 15401 
+   15402 15407 15409 15416 15425 15442 15448 15471 15474 15475 15489 15499 
+   15502 15510 15545 15548 15568 15595 15603 15612 15613 15627 15720 15751 
+   15804 15817.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: lavaan-&gt;lav_model_vcov():  
+   The variance-covariance matrix of the estimated parameters (vcov) does not 
+   appear to be positive definite! The smallest eigenvalue (= -1.566839e-04) 
+   is smaller than zero. This may be a symptom that the model is not 
+   identified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: lavaan-&gt;lav_object_post_check():  
+   some estimated ov variances are negative</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit5)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 24 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                         6
+
+                                                  Used       Total
+  Number of observations                         14840       15892
+  Number of missing patterns                         3            
+
+Model Test User Model:
+                                                      
+  Test statistic                                    NA
+  Degrees of freedom                                -1
+  P-value (Unknown)                                 NA
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  Read =~                                             
+    hrsread           1.000                           
+    absorbread        0.985    0.028   34.980    0.000
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .hrsread           2.719    0.032   85.557    0.000
+   .absorbread        2.729    0.008  327.463    0.000
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+   .hrsread          13.473    0.385   34.964    0.000
+   .absorbread       -0.439    0.071   -6.179    0.000
+    Read              1.304    0.022   58.884    0.000</code></pre>
+</div>
+</div>
+<p>The output reports −1 degrees of freedom, and <code>lavaan</code> warns that a variance is negative. Two items provide three pieces of information (two variances and one covariance). The model needs four parameters: one free loading, two residual variances, and the factor variance. The estimates it reports cannot be trusted.</p>
+</section>
+<section id="an-over-identified-model" class="level3" data-number="11.3.2">
+<h3 data-number="11.3.2" class="anchored" data-anchor-id="an-over-identified-model"><span class="header-section-number">11.3.2</span> An over-identified model</h3>
+<p>With four items, there are 10 pieces of information and 8 parameters, so <em>df</em> = 2:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model6 <span class="ot">&lt;-</span> <span class="st">'Learn =~ hrsread + absorbread + absorbmath + importmath'</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>fit6 <span class="ot">&lt;-</span> <span class="fu">sem</span>(model6, <span class="at">data =</span> els_clean, <span class="at">estimator =</span> <span class="st">"MLR"</span>, <span class="at">missing =</span> <span class="st">"ml"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit6, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 57 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        12
+
+                                                  Used       Total
+  Number of observations                         14869       15892
+  Number of missing patterns                        14            
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                              1605.801    1353.703
+  Degrees of freedom                                 2           2
+  P-value (Chi-square)                           0.000       0.000
+  Scaling correction factor                                  1.186
+    Yuan-Bentler correction (Mplus variant)                       
+
+Model Test Baseline Model:
+
+  Test statistic                              4699.458    3502.886
+  Degrees of freedom                                 6           6
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.342
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.658       0.613
+  Tucker-Lewis Index (TLI)                      -0.025      -0.160
+                                                                  
+  Robust Comparative Fit Index (CFI)                         0.659
+  Robust Tucker-Lewis Index (TLI)                           -0.023
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -83543.142  -83543.142
+  Scaling correction factor                                  1.388
+      for the MLR correction                                      
+  Loglikelihood unrestricted model (H1)     -82740.242  -82740.242
+  Scaling correction factor                                  1.359
+      for the MLR correction                                      
+                                                                  
+  Akaike (AIC)                              167110.285  167110.285
+  Bayesian (BIC)                            167201.569  167201.569
+  Sample-size adjusted Bayesian (SABIC)     167163.434  167163.434
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.232       0.213
+  90 Percent confidence interval - lower         0.223       0.205
+  90 Percent confidence interval - upper         0.242       0.222
+  P-value H_0: RMSEA &lt;= 0.050                    0.000       0.000
+  P-value H_0: RMSEA &gt;= 0.080                    1.000       1.000
+                                                                  
+  Robust RMSEA                                               0.265
+  90 Percent confidence interval - lower                     0.253
+  90 Percent confidence interval - upper                     0.276
+  P-value H_0: Robust RMSEA &lt;= 0.050                         0.000
+  P-value H_0: Robust RMSEA &gt;= 0.080                         1.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.093       0.093
+
+Goodness of Fit Index:
+
+  Goodness of Fit Index (GFI)                    0.949            
+  90 Percent confidence interval - lower         0.945            
+  90 Percent confidence interval - upper         0.953            
+                                                                  
+  Robust GFI                                                 0.935
+  90 Percent confidence interval - lower                     0.929
+  90 Percent confidence interval - upper                     0.940
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  Learn =~                                                              
+    hrsread           1.000                               0.406    0.106
+    absorbread        0.524    0.057    9.257    0.000    0.213    0.234
+    absorbmath        1.314    0.199    6.613    0.000    0.533    0.659
+    importmath        1.506    0.221    6.825    0.000    0.611    0.687
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .hrsread           2.723    0.032   85.440    0.000    2.723    0.708
+   .absorbread        2.733    0.008  324.188    0.000    2.733    3.003
+   .absorbmath        2.511    0.007  337.011    0.000    2.511    3.102
+   .importmath        2.486    0.008  303.487    0.000    2.486    2.794
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .hrsread          14.618    0.383   38.127    0.000   14.618    0.989
+   .absorbread        0.783    0.010   81.549    0.000    0.783    0.945
+   .absorbmath        0.371    0.016   23.771    0.000    0.371    0.566
+   .importmath        0.418    0.020   21.232    0.000    0.418    0.528
+    Learn             0.165    0.047    3.492    0.000    1.000    1.000</code></pre>
+</div>
+</div>
+<p>Now fit can be tested, and it is poor (for example, robust CFI = 0.66 and RMSEA = 0.27). The standardized loadings suggest why. The two math items load strongly, but reading hours and reading absorption load weakly. This suggests the four items do not share a single underlying construct. In a real study, we would revisit the measurement model before going further. For this demonstration, we keep it, to show how a measurement model connects to an outcome.</p>
+</section>
+</section>
+<section id="a-full-structural-equation-model" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="a-full-structural-equation-model"><span class="header-section-number">11.4</span> A full structural equation model</h2>
+<p>A full SEM has two parts. The <em>measurement model</em> links latent variables to their items. The <em>structural model</em> specifies the relationships among variables, here a regression of the test score on the latent factor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>model7 <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="st">  # Measurement model</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Learn =~ hrsread + absorbread + absorbmath + importmath</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # Structural model</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="st">  comptest ~ Learn</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>fit7 <span class="ot">&lt;-</span> <span class="fu">sem</span>(model7, <span class="at">data =</span> els_clean, <span class="at">estimator =</span> <span class="st">"MLR"</span>, <span class="at">missing =</span> <span class="st">"ml"</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit7, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>, <span class="at">rsquare =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 82 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        15
+
+  Number of observations                         15892
+  Number of missing patterns                        15
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                              2259.515    2129.635
+  Degrees of freedom                                 5           5
+  P-value (Chi-square)                           0.000       0.000
+  Scaling correction factor                                  1.061
+    Yuan-Bentler correction (Mplus variant)                       
+
+Model Test Baseline Model:
+
+  Test statistic                              5423.788    4395.037
+  Degrees of freedom                                10          10
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.234
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.584       0.515
+  Tucker-Lewis Index (TLI)                       0.167       0.031
+                                                                  
+  Robust Comparative Fit Index (CFI)                         0.586
+  Robust Tucker-Lewis Index (TLI)                            0.172
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)            -142457.980 -142457.980
+  Scaling correction factor                                  1.321
+      for the MLR correction                                      
+  Loglikelihood unrestricted model (H1)    -141328.222 -141328.222
+  Scaling correction factor                                  1.256
+      for the MLR correction                                      
+                                                                  
+  Akaike (AIC)                              284945.959  284945.959
+  Bayesian (BIC)                            285061.063  285061.063
+  Sample-size adjusted Bayesian (SABIC)     285013.394  285013.394
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.168       0.164
+  90 Percent confidence interval - lower         0.163       0.158
+  90 Percent confidence interval - upper         0.174       0.169
+  P-value H_0: RMSEA &lt;= 0.050                    0.000       0.000
+  P-value H_0: RMSEA &gt;= 0.080                    1.000       1.000
+                                                                  
+  Robust RMSEA                                               0.197
+  90 Percent confidence interval - lower                     0.190
+  90 Percent confidence interval - upper                     0.205
+  P-value H_0: Robust RMSEA &lt;= 0.050                         0.000
+  P-value H_0: Robust RMSEA &gt;= 0.080                         1.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.093       0.093
+
+Goodness of Fit Index:
+
+  Goodness of Fit Index (GFI)                    0.946            
+  90 Percent confidence interval - lower         0.943            
+  90 Percent confidence interval - upper         0.950            
+                                                                  
+  Robust GFI                                                 0.928
+  90 Percent confidence interval - lower                     0.923
+  90 Percent confidence interval - upper                     0.932
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  Learn =~                                                              
+    hrsread           1.000                               0.449    0.117
+    absorbread        0.506    0.049   10.365    0.000    0.227    0.250
+    absorbmath        1.152    0.163    7.075    0.000    0.517    0.638
+    importmath        1.387    0.200    6.928    0.000    0.622    0.699
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  comptest ~                                                            
+    Learn             2.210    0.320    6.900    0.000    0.991    0.100
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .hrsread           2.721    0.032   85.401    0.000    2.721    0.708
+   .absorbread        2.731    0.008  321.920    0.000    2.731    3.001
+   .absorbmath        2.506    0.007  336.076    0.000    2.506    3.096
+   .importmath        2.480    0.008  300.845    0.000    2.480    2.787
+   .comptest         50.658    0.078  646.384    0.000   50.658    5.127
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .hrsread          14.581    0.384   37.981    0.000   14.581    0.986
+   .absorbread        0.777    0.010   76.600    0.000    0.777    0.938
+   .absorbmath        0.388    0.013   30.269    0.000    0.388    0.592
+   .importmath        0.405    0.018   22.702    0.000    0.405    0.511
+   .comptest         96.626    0.994   97.191    0.000   96.626    0.990
+    Learn             0.201    0.055    3.674    0.000    1.000    1.000
+
+R-Square:
+                   Estimate
+    hrsread           0.014
+    absorbread        0.062
+    absorbmath        0.408
+    importmath        0.489
+    comptest          0.010</code></pre>
+</div>
+</div>
+<p>The latent factor is positively related to test scores (standardized coefficient = 0.10), but it explains only about 1% of their variance. The model also inherits the poor fit of its measurement model. A weak measurement model limits what the structural model can tell us, which is why it is good practice to establish the measurement model first.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(fit7, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">intercepts =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="fl">1.1</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">nCharNodes =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="11-sem-path-analysis_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="12-sem-mediation.html" class="quarto-xref"><span>Chapter 12</span></a> extends this framework to mediation models, with both observed and latent variables.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./10-cfa.html" class="pagination-link" aria-label="Confirmatory Factor Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Confirmatory Factor Analysis</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./12-sem-mediation.html" class="pagination-link" aria-label="Structural Equation Modeling II: Mediation">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Structural Equation Modeling II: Mediation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,194 @@
+# Structural Equation Modeling I: Path Analysis and Latent Variables {#sec-sem1}
+
+Structural equation modeling (SEM) is a general framework that includes many of the models in this book as special cases. In this chapter, we first show that familiar analyses (regression, the *t*-test, and ANOVA) can all be written as *path models* in `lavaan`. Then we combine a measurement model, like the CFAs in @sec-cfa, with a regression model to estimate a full SEM.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(lavaan)
+library(semPlot)
+```
+
+## The data
+
+We return to the ELS:2002 data from @sec-logistic. We keep a small set of variables and give them readable names. `transmute()` creates and keeps only the variables we name.
+
+- `hrsread`: hours per week spent reading outside of school
+- `absorbmath`: "Gets totally absorbed in mathematics"
+- `absorbread`: "Gets totally absorbed in reading"
+- `importmath`: "Mathematics is important"
+- `comptest`: standardized math and reading test score
+- `ap`: ever took part in an Advanced Placement program (1 = yes, 0 = no)
+- `sesq`: SES quartile
+
+The three attitude items are rated from 1 (strongly agree) to 4 (strongly disagree), so we reverse-code them (5 minus the score). Higher values then mean more absorption and importance. As in @sec-logistic, negative values are missing data codes.
+
+```{r}
+els <- read_dta("data/ELS_Logistic.dta")
+
+els_clean <- els |>
+  zap_labels() |>
+  mutate(across(c(bys43, bys87a, bys87e, bys87f, bytxcstd, bys33a, byses1qu),
+                ~ if_else(.x < 0, NA, .x))) |>
+  transmute(
+    hrsread = bys43,
+    absorbmath = 5 - bys87a,
+    absorbread = 5 - bys87e,
+    importmath = 5 - bys87f,
+    comptest = bytxcstd,
+    ap = bys33a,
+    sesq = factor(byses1qu, levels = 1:4,
+                  labels = c("Lowest", "Second", "Third", "Highest"))
+  ) |>
+  filter(!is.na(comptest))
+
+summary(els_clean)
+```
+
+We keep only students with a test score, since it is the outcome in most models below. Many students are still missing one or more predictors.
+
+### Handling missing data
+
+In `lavaan`, `missing = "ml"` uses full information maximum likelihood (FIML), which keeps every case and uses all of the data each case has (see @sec-missing). By default, FIML applies only to the outcome variables. Adding `fixed.x = FALSE` extends it to the predictors. We also use `estimator = "MLR"`, which gives standard errors that are robust to non-normal data. We use these three options throughout the chapter.
+
+## Path analysis
+
+### Simple regression
+
+A path model uses the same `~` operator as `lm()`. The line below regresses the test score on reading absorption:
+
+```{r}
+model1 <- 'comptest ~ absorbread'
+
+fit1 <- sem(model1, data = els_clean,
+            estimator = "MLR", missing = "ml", fixed.x = FALSE)
+summary(fit1, standardized = TRUE)
+```
+
+Compare this to the same model fit with `lm()`:
+
+```{r}
+lm1 <- lm(comptest ~ absorbread, data = els_clean)
+summary(lm1)
+nobs(lm1)
+```
+
+The coefficients are very close. The key difference is the sample: `lm()` drops every student missing `absorbread`, while the path model keeps all of them. With only one predictor, the standardized coefficient (`Std.all`) is the correlation between the two variables.
+
+```{r}
+semPaths(fit1, whatLabels = "std", edge.label.cex = 1.2, sizeMan = 10,
+         intercepts = FALSE, nCharNodes = 0)
+```
+
+### Independent samples *t*-test
+
+A *t*-test is a regression with one binary predictor. Here, we compare math absorption for students who had and had not taken part in an AP program:
+
+```{r}
+model2 <- 'absorbmath ~ ap'
+
+fit2 <- sem(model2, data = els_clean,
+            estimator = "MLR", missing = "ml", fixed.x = FALSE)
+summary(fit2)
+```
+
+The intercept (in the `Intercepts` section) is the mean for students with `ap = 0`. The coefficient for `ap` is the difference between the two group means. AP participants reported slightly more absorption in math.
+
+### One-way ANOVA
+
+A one-way ANOVA is a regression with a set of dummy variables. In `lavaan`, we create the dummies ourselves. We leave out the lowest quartile, which makes it the reference group.
+
+```{r}
+els_clean <- els_clean |>
+  mutate(
+    ses2 = if_else(sesq == "Second", 1, 0),
+    ses3 = if_else(sesq == "Third", 1, 0),
+    ses4 = if_else(sesq == "Highest", 1, 0)
+  )
+
+model3 <- 'importmath ~ ses2 + ses3 + ses4'
+
+fit3 <- sem(model3, data = els_clean,
+            estimator = "MLR", missing = "ml", fixed.x = FALSE)
+summary(fit3)
+```
+
+Each coefficient is the difference in mean math importance between that quartile and the lowest. Because `if_else()` returns `NA` when `sesq` is missing, students with unknown SES stay missing rather than being placed in the reference group by mistake.
+
+### Multiple regression
+
+A multiple regression adds more predictors to the same line:
+
+```{r}
+model4 <- '
+  comptest ~ hrsread + absorbmath + absorbread + importmath + ap +
+             ses2 + ses3 + ses4
+'
+
+fit4 <- sem(model4, data = els_clean,
+            estimator = "MLR", missing = "ml", fixed.x = FALSE)
+summary(fit4, standardized = TRUE, rsquare = TRUE)
+```
+
+All of these models have zero degrees of freedom. Each estimates every possible path among its variables, so it is *just-identified* and fits the data perfectly. That is why there are no fit statistics to interpret. Fit statistics become meaningful once a model places constraints on the data, as the latent variable models below do.
+
+## Identification
+
+Before we add latent variables, we need to know whether a model can be estimated at all. A model is *identified* when there is enough information in the data to estimate every parameter. The information is the number of unique variances and covariances among the observed variables. With *p* variables, there are *p*(*p* + 1)/2 of them. The degrees of freedom equal this number minus the number of parameters estimated.
+
+- **Under-identified** (*df* < 0): more parameters than information. The model cannot be estimated.
+- **Just-identified** (*df* = 0): the model can be estimated but fits perfectly, so fit cannot be tested.
+- **Over-identified** (*df* > 0): the model can be estimated, and its fit can be tested.
+
+### An under-identified model
+
+A factor measured by only two items is under-identified on its own:
+
+```{r}
+#| warning: true
+model5 <- 'Read =~ hrsread + absorbread'
+
+fit5 <- sem(model5, data = els_clean, estimator = "MLR", missing = "ml")
+summary(fit5)
+```
+
+The output reports −1 degrees of freedom, and `lavaan` warns that a variance is negative. Two items provide three pieces of information (two variances and one covariance). The model needs four parameters: one free loading, two residual variances, and the factor variance. The estimates it reports cannot be trusted.
+
+### An over-identified model
+
+With four items, there are 10 pieces of information and 8 parameters, so *df* = 2:
+
+```{r}
+model6 <- 'Learn =~ hrsread + absorbread + absorbmath + importmath'
+
+fit6 <- sem(model6, data = els_clean, estimator = "MLR", missing = "ml")
+summary(fit6, fit.measures = TRUE, standardized = TRUE)
+```
+
+Now fit can be tested, and it is poor (for example, robust CFI = 0.66 and RMSEA = 0.27). The standardized loadings suggest why. The two math items load strongly, but reading hours and reading absorption load weakly. This suggests the four items do not share a single underlying construct. In a real study, we would revisit the measurement model before going further. For this demonstration, we keep it, to show how a measurement model connects to an outcome.
+
+## A full structural equation model
+
+A full SEM has two parts. The *measurement model* links latent variables to their items. The *structural model* specifies the relationships among variables, here a regression of the test score on the latent factor.
+
+```{r}
+model7 <- '
+  # Measurement model
+  Learn =~ hrsread + absorbread + absorbmath + importmath
+
+  # Structural model
+  comptest ~ Learn
+'
+
+fit7 <- sem(model7, data = els_clean, estimator = "MLR", missing = "ml")
+summary(fit7, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE)
+```
+
+The latent factor is positively related to test scores (standardized coefficient = 0.10), but it explains only about 1% of their variance. The model also inherits the poor fit of its measurement model. A weak measurement model limits what the structural model can tell us, which is why it is good practice to establish the measurement model first.
+
+```{r}
+semPaths(fit7, whatLabels = "std", intercepts = FALSE,
+         edge.label.cex = 1.1, sizeMan = 8, nCharNodes = 0)
+```
+
+@sec-sem2 extends this framework to mediation models, with both observed and latent variables.

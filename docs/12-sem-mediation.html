@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>12&nbsp; Structural Equation Modeling II: Mediation – Applied Multivariate Statistics in Education</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./11-sem-path-analysis.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-18a86156fa881a144d2995565f3cba36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-sem-path-analysis.html">Structural Equation Modeling</a></li><li class="breadcrumb-item"><a href="./12-sem-mediation.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Structural Equation Modeling II: Mediation</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Applied Multivariate Statistics in Education</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/mikediam123/mvs-textbook" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Getting Started with R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-anova-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Review of Regression and ANOVA</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extending the General Linear Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-moderation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Moderation and Interaction Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-repeated-measures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">ANCOVA and Repeated Measures ANOVA</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Checking Model Assumptions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-missing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Missing Data and Multiple Imputation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Classification and Measurement</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-cluster-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Cluster Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-efa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exploratory Factor Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Confirmatory Factor Analysis</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Structural Equation Modeling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-sem-path-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Structural Equation Modeling I: Path Analysis and Latent Variables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-sem-mediation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Structural Equation Modeling II: Mediation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-paths-in-a-mediation-model" id="toc-the-paths-in-a-mediation-model" class="nav-link active" data-scroll-target="#the-paths-in-a-mediation-model"><span class="header-section-number">12.1</span> The paths in a mediation model</a></li>
+  <li><a href="#mediation-with-observed-variables" id="toc-mediation-with-observed-variables" class="nav-link" data-scroll-target="#mediation-with-observed-variables"><span class="header-section-number">12.2</span> Mediation with observed variables</a>
+  <ul class="collapse">
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data"><span class="header-section-number">12.2.1</span> The data</a></li>
+  <li><a href="#specifying-the-model" id="toc-specifying-the-model" class="nav-link" data-scroll-target="#specifying-the-model"><span class="header-section-number">12.2.2</span> Specifying the model</a></li>
+  <li><a href="#bootstrapped-confidence-intervals" id="toc-bootstrapped-confidence-intervals" class="nav-link" data-scroll-target="#bootstrapped-confidence-intervals"><span class="header-section-number">12.2.3</span> Bootstrapped confidence intervals</a></li>
+  <li><a href="#path-diagram" id="toc-path-diagram" class="nav-link" data-scroll-target="#path-diagram"><span class="header-section-number">12.2.4</span> Path diagram</a></li>
+  </ul></li>
+  <li><a href="#mediation-with-latent-variables" id="toc-mediation-with-latent-variables" class="nav-link" data-scroll-target="#mediation-with-latent-variables"><span class="header-section-number">12.3</span> Mediation with latent variables</a>
+  <ul class="collapse">
+  <li><a href="#the-data-1" id="toc-the-data-1" class="nav-link" data-scroll-target="#the-data-1"><span class="header-section-number">12.3.1</span> The data</a></li>
+  <li><a href="#step-1-the-measurement-model" id="toc-step-1-the-measurement-model" class="nav-link" data-scroll-target="#step-1-the-measurement-model"><span class="header-section-number">12.3.2</span> Step 1: The measurement model</a></li>
+  <li><a href="#step-2-the-structural-model" id="toc-step-2-the-structural-model" class="nav-link" data-scroll-target="#step-2-the-structural-model"><span class="header-section-number">12.3.3</span> Step 2: The structural model</a></li>
+  <li><a href="#bootstrapped-confidence-intervals-1" id="toc-bootstrapped-confidence-intervals-1" class="nav-link" data-scroll-target="#bootstrapped-confidence-intervals-1"><span class="header-section-number">12.3.4</span> Bootstrapped confidence intervals</a></li>
+  <li><a href="#path-diagram-1" id="toc-path-diagram-1" class="nav-link" data-scroll-target="#path-diagram-1"><span class="header-section-number">12.3.5</span> Path diagram</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-sem-path-analysis.html">Structural Equation Modeling</a></li><li class="breadcrumb-item"><a href="./12-sem-mediation.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Structural Equation Modeling II: Mediation</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sem2" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Structural Equation Modeling II: Mediation</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>A mediation model asks <em>how</em> or <em>why</em> a predictor affects an outcome. It proposes that some or all of the effect of a predictor (<em>X</em>) travels through a third variable, the mediator (<em>M</em>), on its way to the outcome (<em>Y</em>). In this chapter, we estimate mediation models in <code>lavaan</code>. We start with observed variables and then extend the same model to latent variables.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lavaan)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semPlot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="the-paths-in-a-mediation-model" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="the-paths-in-a-mediation-model"><span class="header-section-number">12.1</span> The paths in a mediation model</h2>
+<p>A simple mediation model has three paths:</p>
+<ul>
+<li>The <strong>a path</strong> runs from <em>X</em> to <em>M</em>.</li>
+<li>The <strong>b path</strong> runs from <em>M</em> to <em>Y</em>, controlling for <em>X</em>.</li>
+<li>The <strong>c′ path</strong> (c-prime) runs from <em>X</em> to <em>Y</em>, controlling for <em>M</em>. This is the <strong>direct effect</strong>.</li>
+</ul>
+<p>From these paths, we can build two more quantities:</p>
+<ul>
+<li>The <strong>indirect effect</strong> is the product <em>a</em> × <em>b</em>. It is the part of the effect of <em>X</em> that passes through <em>M</em>.</li>
+<li>The <strong>total effect</strong> is <em>c′</em> + <em>ab</em>. It equals the slope you would get by regressing <em>Y</em> on <em>X</em> alone (the <em>c</em> path).</li>
+</ul>
+</section>
+<section id="mediation-with-observed-variables" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="mediation-with-observed-variables"><span class="header-section-number">12.2</span> Mediation with observed variables</h2>
+<section id="the-data" class="level3" data-number="12.2.1">
+<h3 data-number="12.2.1" class="anchored" data-anchor-id="the-data"><span class="header-section-number">12.2.1</span> The data</h3>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Note:</strong> These are simulated data for 500 respondents. All three variables are scale scores centered near zero.</p>
+</div>
+</div>
+</div>
+<p>The model proposes that conscientiousness (<code>consc</code>) is related to overall physical health (<code>health</code>) partly because conscientious people tend to engage in more health-related behaviors (<code>behave</code>).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>health <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/health_old.dta"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(health)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 500
+Columns: 4
+$ id     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, …
+$ consc  &lt;dbl&gt; -0.534766, 0.522444, 1.581126, -0.458229, 0.275520, -0.893238, …
+$ behave &lt;dbl&gt; 0.099598, 0.958975, 2.484509, 0.885141, -0.840232, -1.465911, -…
+$ health &lt;dbl&gt; -0.886676, 2.618775, 3.084666, 0.249537, -2.079687, -0.025422, …</code></pre>
+</div>
+</div>
+</section>
+<section id="specifying-the-model" class="level3" data-number="12.2.2">
+<h3 data-number="12.2.2" class="anchored" data-anchor-id="specifying-the-model"><span class="header-section-number">12.2.2</span> Specifying the model</h3>
+<p>The model syntax has three parts. First, we write the regressions and attach a label to each path with <code>*</code>. Here, <code>c *</code> labels the direct path, <code>a *</code> the path to the mediator, and <code>b *</code> the path from the mediator. Second, we use the <code>:=</code> operator to define new parameters from those labels: the indirect effect <code>ab</code> and the total effect. Because <code>lavaan</code> estimates these defined parameters directly, it also gives us their standard errors and <em>p</em>-values.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>med_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">  # direct effect</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">  health ~ c * consc</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # mediator</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">  behave ~ a * consc</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">  health ~ b * behave</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="st">  # indirect effect (a * b)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">  ab := a * b</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">  # total effect</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="st">  total := c + (a * b)</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A few variables have missing values. The option <code>missing = "ml"</code> uses full information maximum likelihood (FIML) to keep every case in the analysis. Adding <code>fixed.x = FALSE</code> extends FIML to the predictor, <code>consc</code>, as well. Without it, <code>lavaan</code> drops the five cases missing <code>consc</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>med_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(med_model, <span class="at">data =</span> health, <span class="at">missing =</span> <span class="st">"ml"</span>, <span class="at">fixed.x =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(med_fit, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 9 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                         9
+
+  Number of observations                           500
+  Number of missing patterns                         4
+
+Model Test User Model:
+                                                      
+  Test statistic                                 0.000
+  Degrees of freedom                                 0
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Observed
+  Observed information based on                Hessian
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  health ~                                                              
+    consc      (c)    0.269    0.043    6.228    0.000    0.269    0.270
+  behave ~                                                              
+    consc      (a)    0.528    0.038   13.939    0.000    0.528    0.531
+  health ~                                                              
+    behave     (b)    0.389    0.043    8.996    0.000    0.389    0.389
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .health            0.028    0.051    0.541    0.589    0.028    0.020
+   .behave            0.030    0.053    0.569    0.569    0.030    0.022
+    consc            -0.011    0.063   -0.172    0.864   -0.011   -0.008
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .health            1.298    0.082   15.746    0.000    1.298    0.664
+   .behave            1.405    0.089   15.733    0.000    1.405    0.718
+    consc             1.973    0.125   15.736    0.000    1.973    1.000
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    ab                0.206    0.027    7.549    0.000    0.206    0.207
+    total             0.475    0.039   12.076    0.000    0.475    0.477</code></pre>
+</div>
+</div>
+<p>All three paths are positive and significant. The indirect effect (<code>ab</code>) is 0.21, and the total effect is 0.47. Thus, about 43% of the total effect of conscientiousness on health (0.21 / 0.47) appears to run through health behaviors. The direct effect remains significant, so health behaviors account for only part of the relationship. This pattern is often called <em>partial mediation</em>.</p>
+<p>This model has zero degrees of freedom: it estimates every possible path among the three variables. Such a model is <em>just-identified</em>. It fits the data perfectly by definition, so fit statistics like CFI and RMSEA are not informative here.</p>
+<p><code>lavInspect()</code> returns the proportion of variance explained in each endogenous variable:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavInspect</span>(med_fit, <span class="st">"r2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>health behave 
+ 0.336  0.282 </code></pre>
+</div>
+</div>
+</section>
+<section id="bootstrapped-confidence-intervals" class="level3" data-number="12.2.3">
+<h3 data-number="12.2.3" class="anchored" data-anchor-id="bootstrapped-confidence-intervals"><span class="header-section-number">12.2.3</span> Bootstrapped confidence intervals</h3>
+<p>The standard error for the indirect effect assumes that <em>ab</em> is normally distributed. Because it is a product of two estimates, its sampling distribution is often skewed, especially in small samples. A bootstrap confidence interval does not rely on that assumption. For this reason, it is the recommended way to test an indirect effect.</p>
+<p>Bootstrapping refits the model to many resampled datasets, so this step can take a moment. Setting a seed makes the results reproducible.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">663</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>med_boot <span class="ot">&lt;-</span> <span class="fu">sem</span>(med_model, <span class="at">data =</span> health, <span class="at">missing =</span> <span class="st">"ml"</span>, <span class="at">fixed.x =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">se =</span> <span class="st">"bootstrap"</span>, <span class="at">bootstrap =</span> <span class="dv">1000</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">parameterEstimates</span>(med_boot, <span class="at">boot.ci.type =</span> <span class="st">"perc"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(op <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"~"</span>, <span class="st">":="</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["lhs"],"name":[1],"type":["chr"],"align":["left"]},{"label":["op"],"name":[2],"type":["chr"],"align":["left"]},{"label":["rhs"],"name":[3],"type":["chr"],"align":["left"]},{"label":["label"],"name":[4],"type":["chr"],"align":["left"]},{"label":["est"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["z"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["pvalue"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["ci.lower"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["ci.upper"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"health","2":"~","3":"consc","4":"c","5":"0.2689991","6":"0.04336475","7":"6.203175","8":"5.533514e-10","9":"0.1881182","10":"0.3587908"},{"1":"behave","2":"~","3":"consc","4":"a","5":"0.5283652","6":"0.03763574","7":"14.038920","8":"0.000000e+00","9":"0.4551923","10":"0.6001132"},{"1":"health","2":"~","3":"behave","4":"b","5":"0.3894668","6":"0.04264800","7":"9.132124","8":"0.000000e+00","9":"0.3126837","10":"0.4726434"},{"1":"ab","2":":=","3":"a*b","4":"ab","5":"0.2057807","6":"0.02843829","7":"7.236043","8":"4.620748e-13","9":"0.1541648","10":"0.2681641"},{"1":"total","2":":=","3":"c+(a*b)","4":"total","5":"0.4747798","6":"0.03943786","7":"12.038681","8":"0.000000e+00","9":"0.3975467","10":"0.5531411"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>The 95% percentile interval for <code>ab</code> does not include zero. This supports the conclusion that the indirect effect is statistically significant.</p>
+</section>
+<section id="path-diagram" class="level3" data-number="12.2.4">
+<h3 data-number="12.2.4" class="anchored" data-anchor-id="path-diagram"><span class="header-section-number">12.2.4</span> Path diagram</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(med_fit, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">intercepts =</span> <span class="cn">FALSE</span>, <span class="at">residuals =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">nCharNodes =</span> <span class="dv">0</span>, <span class="at">sizeMan =</span> <span class="dv">12</span>, <span class="at">edge.label.cex =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="12-sem-mediation_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="mediation-with-latent-variables" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="mediation-with-latent-variables"><span class="header-section-number">12.3</span> Mediation with latent variables</h2>
+<p>Mediation models can also link latent variables. This takes two steps, much like the full SEM models in <a href="11-sem-path-analysis.html" class="quarto-xref"><span>Chapter 11</span></a>. First, we specify and check a measurement model. Second, we add the structural (mediation) paths.</p>
+<section id="the-data-1" class="level3" data-number="12.3.1">
+<h3 data-number="12.3.1" class="anchored" data-anchor-id="the-data-1"><span class="header-section-number">12.3.1</span> The data</h3>
+<p>The <code>writing</code> data include 1,509 students’ responses to three writing-related scales, each rated on a 4-point scale:</p>
+<ul>
+<li>Feedback perceptions (<code>FBP</code>): 5 items</li>
+<li>Writing self-efficacy (<code>SE</code>): 9 items</li>
+<li>Writing self-regulation (<code>SR</code>): 12 items</li>
+</ul>
+<p>The model proposes that self-efficacy is related to self-regulation partly through students’ perceptions of feedback.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Note:</strong> Students in these data are grouped within 65 teachers (<code>W1_TNum</code>). Students who share a teacher may be more alike than students who do not, and this can make standard errors too small. For simplicity, the models in this chapter ignore that nesting. Multilevel SEM can account for it.</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>writing <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/writing.dta"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(writing)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,509
+Columns: 27
+$ W1_FBP1 &lt;dbl&gt; 3, 4, 4, 3, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 1, 4, 3, 3, 2, 4, 3,…
+$ W1_FBP2 &lt;dbl&gt; 3, 4, 2, 3, 2, 3, 3, 2, 3, 4, 2, 4, 1, 4, 1, 4, 3, 2, 2, 4, 3,…
+$ W1_FBP3 &lt;dbl&gt; 4, 4, 4, 3, 4, 4, 2, 1, 3, 4, 3, 4, 3, 4, 1, 4, 2, 2, 3, 4, 3,…
+$ W1_FBP4 &lt;dbl&gt; 3, 4, 4, 3, 3, 4, 3, 2, 3, 4, 3, 4, 3, 4, 1, 4, 2, 2, 2, 4, 2,…
+$ W1_FBP5 &lt;dbl&gt; 2, 4, 3, 3, 2, 2, 2, 2, 2, 4, 1, 4, 1, 4, 1, 3, 2, 3, 3, 4, 2,…
+$ W1_SE1  &lt;dbl&gt; 4, 4, 3, 3, 3, 4, 4, 4, 4, 4, 3, 3, 4, 3, 4, 4, 2, 4, 4, 4, 2,…
+$ W1_SE2  &lt;dbl&gt; 4, 4, 2, 2, 4, 4, 2, 2, 4, 4, 3, 3, 3, 3, 2, 4, 2, 4, 1, 4, 3,…
+$ W1_SE3  &lt;dbl&gt; 3, 3, 3, 2, 4, 3, 4, 4, 4, 4, 3, 4, 4, 3, 3, 3, 3, 4, 4, 4, 2,…
+$ W1_SE4  &lt;dbl&gt; 3, 2, 2, 2, 4, 2, 3, 2, 2, 4, 2, 3, 2, 3, 2, 1, 2, 2, 2, 4, 3,…
+$ W1_SE5  &lt;dbl&gt; 4, 2, 3, 2, 3, 4, 3, 4, 4, 4, 3, 3, 4, 2, 4, 2, 2, 3, 3, 4, 4,…
+$ W1_SE6  &lt;dbl&gt; 2, 4, 2, 2, 4, 3, 3, 2, 4, 3, 3, 3, 3, 3, 1, 3, 2, 4, 2, 4, 1,…
+$ W1_SE7  &lt;dbl&gt; 4, 4, 3, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 3, 1, 2, 2, 3, 3, 4, 4,…
+$ W1_SE8  &lt;dbl&gt; 2, 3, 3, 3, 2, 3, 3, 2, 3, 3, 2, 4, 2, 3, 1, 2, 3, 2, 2, 4, 1,…
+$ W1_SE9  &lt;dbl&gt; 3, 3, 3, 2, 4, 4, 3, 3, 2, 4, 3, 4, 4, 3, 1, 2, 3, 2, 2, 4, 4,…
+$ W1_SR1  &lt;dbl&gt; 3, 4, 4, 2, 3, 2, 4, 3, 4, 4, 3, 3, 1, 4, 2, 3, 3, 4, 4, 4, 2,…
+$ W1_SR2  &lt;dbl&gt; 2, 2, 3, 2, 2, 3, 2, 2, 2, 1, 3, 3, 1, 3, 1, 3, 2, 2, 1, 3, 2,…
+$ W1_SR3  &lt;dbl&gt; 4, 4, 3, 2, 1, 2, 3, 1, 4, 2, 3, 4, 1, 3, 2, 4, 3, 2, 3, 4, 3,…
+$ W1_SR4  &lt;dbl&gt; 4, 4, 3, 2, 2, 4, 4, 2, 3, 4, 2, 3, 2, 2, 1, 4, 3, 3, 4, 4, 2,…
+$ W1_SR5  &lt;dbl&gt; 4, 3, 4, 2, 2, 2, 3, 2, 2, 1, 4, 2, 2, 4, 2, 3, 2, 4, 2, 2, 3,…
+$ W1_SR6  &lt;dbl&gt; 2, 4, 1, 2, 3, 2, 2, 2, 2, 3, 3, 4, 1, 3, 2, 3, 2, 2, 1, 3, 1,…
+$ W1_SR7  &lt;dbl&gt; 4, 3, 4, 3, 4, 3, 3, 3, 2, 4, 3, 4, 4, 2, 2, 4, 2, 2, 4, 3, 2,…
+$ W1_SR8  &lt;dbl&gt; 2, 2, 3, 2, 3, 2, 3, 3, 3, 1, 3, 3, 2, 3, 1, 2, 3, 2, 2, 4, 4,…
+$ W1_SR9  &lt;dbl&gt; 3, 3, 4, 3, 4, 2, 3, 3, 2, 4, 2, 3, 1, 3, 1, 3, 1, 4, 3, 4, 3,…
+$ W1_SR10 &lt;dbl&gt; 4, 4, 4, 2, 3, 2, 2, 1, 3, 1, 3, 4, 1, 4, 1, 3, 2, 3, 2, 4, 2,…
+$ W1_SR11 &lt;dbl&gt; 4, 3, 4, 4, 3, 2, 4, 4, 4, 3, 2, 3, 2, 3, 3, 4, 3, 2, 4, 3, 3,…
+$ W1_SR12 &lt;dbl&gt; 4, 4, 4, 2, 4, 3, 3, 2, 3, 4, 4, 4, 1, 3, 1, 2, 2, 4, 2, 4, 2,…
+$ W1_TNum &lt;dbl&gt; 71, 34, 63, 52, 81, 71, 71, 71, 83, 70, 84, 83, 76, 60, 85, 80…</code></pre>
+</div>
+</div>
+</section>
+<section id="step-1-the-measurement-model" class="level3" data-number="12.3.2">
+<h3 data-number="12.3.2" class="anchored" data-anchor-id="step-1-the-measurement-model"><span class="header-section-number">12.3.2</span> Step 1: The measurement model</h3>
+<p>We start with a confirmatory factor analysis (<a href="10-cfa.html" class="quarto-xref"><span>Chapter 10</span></a>) of all three scales:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cfa_model <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="st">  FBP =~ W1_FBP1 + W1_FBP2 + W1_FBP3 + W1_FBP4 + W1_FBP5</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="st">  SE  =~ W1_SE1 + W1_SE2 + W1_SE3 + W1_SE4 + W1_SE5 + W1_SE6 +</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="st">         W1_SE7 + W1_SE8 + W1_SE9</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="st">  SR  =~ W1_SR1 + W1_SR2 + W1_SR3 + W1_SR4 + W1_SR5 + W1_SR6 +</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="st">         W1_SR7 + W1_SR8 + W1_SR9 + W1_SR10 + W1_SR11 + W1_SR12</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="st">'</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>cfa_fit <span class="ot">&lt;-</span> <span class="fu">cfa</span>(cfa_model, <span class="at">data =</span> writing, <span class="at">missing =</span> <span class="st">"ml"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cfa_fit, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 96 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        81
+
+  Number of observations                          1509
+  Number of missing patterns                        27
+
+Model Test User Model:
+                                                      
+  Test statistic                              1988.299
+  Degrees of freedom                               296
+  P-value (Chi-square)                           0.000
+
+Model Test Baseline Model:
+
+  Test statistic                             13338.258
+  Degrees of freedom                               325
+  P-value                                        0.000
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.870
+  Tucker-Lewis Index (TLI)                       0.857
+                                                      
+  Robust Comparative Fit Index (CFI)             0.870
+  Robust Tucker-Lewis Index (TLI)                0.857
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -48264.380
+  Loglikelihood unrestricted model (H1)     -47270.231
+                                                      
+  Akaike (AIC)                               96690.761
+  Bayesian (BIC)                             97121.616
+  Sample-size adjusted Bayesian (SABIC)      96864.301
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.062
+  90 Percent confidence interval - lower         0.059
+  90 Percent confidence interval - upper         0.064
+  P-value H_0: RMSEA &lt;= 0.050                    0.000
+  P-value H_0: RMSEA &gt;= 0.080                    0.000
+                                                      
+  Robust RMSEA                                   0.062
+  90 Percent confidence interval - lower         0.059
+  90 Percent confidence interval - upper         0.064
+  P-value H_0: Robust RMSEA &lt;= 0.050             0.000
+  P-value H_0: Robust RMSEA &gt;= 0.080             0.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.050
+
+Goodness of Fit Index:
+
+  Goodness of Fit Index (GFI)                    0.921
+  90 Percent confidence interval - lower         0.914
+  90 Percent confidence interval - upper         0.927
+                                                      
+  Robust GFI                                     0.920
+  90 Percent confidence interval - lower         0.914
+  90 Percent confidence interval - upper         0.926
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  FBP =~                                                                
+    W1_FBP1           1.000                               0.633    0.707
+    W1_FBP2           1.276    0.047   27.173    0.000    0.807    0.779
+    W1_FBP3           1.117    0.044   25.105    0.000    0.707    0.705
+    W1_FBP4           1.194    0.040   29.778    0.000    0.755    0.814
+    W1_FBP5           1.416    0.050   28.118    0.000    0.896    0.811
+  SE =~                                                                 
+    W1_SE1            1.000                               0.243    0.343
+    W1_SE2            2.274    0.190   11.941    0.000    0.552    0.625
+    W1_SE3            1.293    0.126   10.291    0.000    0.314    0.396
+    W1_SE4            2.873    0.236   12.166    0.000    0.697    0.695
+    W1_SE5            0.852    0.111    7.679    0.000    0.207    0.247
+    W1_SE6            2.654    0.214   12.391    0.000    0.644    0.729
+    W1_SE7            2.552    0.207   12.308    0.000    0.619    0.718
+    W1_SE8            2.559    0.217   11.767    0.000    0.621    0.609
+    W1_SE9            2.657    0.220   12.106    0.000    0.645    0.670
+  SR =~                                                                 
+    W1_SR1            1.000                               0.490    0.550
+    W1_SR2            1.201    0.070   17.251    0.000    0.588    0.588
+    W1_SR3            1.026    0.070   14.625    0.000    0.503    0.471
+    W1_SR4            0.738    0.065   11.329    0.000    0.361    0.342
+    W1_SR5            0.729    0.066   11.120    0.000    0.357    0.335
+    W1_SR6            1.344    0.074   18.180    0.000    0.658    0.643
+    W1_SR7            0.931    0.062   15.106    0.000    0.456    0.489
+    W1_SR8            1.068    0.068   15.638    0.000    0.523    0.511
+    W1_SR9            1.036    0.070   14.878    0.000    0.507    0.480
+    W1_SR10           1.228    0.073   16.847    0.000    0.601    0.570
+    W1_SR11           0.842    0.057   14.847    0.000    0.412    0.471
+    W1_SR12           1.320    0.077   17.073    0.000    0.646    0.586
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  FBP ~~                                                                
+    SE                0.096    0.009   10.467    0.000    0.627    0.627
+    SR                0.210    0.015   14.127    0.000    0.679    0.679
+  SE ~~                                                                 
+    SR                0.091    0.009   10.191    0.000    0.764    0.764
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .W1_FBP1           3.394    0.023  147.261    0.000    3.394    3.792
+   .W1_FBP2           2.941    0.027  110.275    0.000    2.941    2.840
+   .W1_FBP3           3.232    0.026  125.156    0.000    3.232    3.224
+   .W1_FBP4           3.245    0.024  135.924    0.000    3.245    3.500
+   .W1_FBP5           2.800    0.028   98.440    0.000    2.800    2.534
+   .W1_SE1            3.552    0.018  194.684    0.000    3.552    5.018
+   .W1_SE2            2.963    0.023  130.449    0.000    2.963    3.359
+   .W1_SE3            3.355    0.020  164.465    0.000    3.355    4.234
+   .W1_SE4            2.862    0.026  110.737    0.000    2.862    2.853
+   .W1_SE5            3.133    0.022  145.393    0.000    3.133    3.744
+   .W1_SE6            3.084    0.023  135.652    0.000    3.084    3.493
+   .W1_SE7            3.166    0.022  142.529    0.000    3.166    3.670
+   .W1_SE8            2.751    0.026  104.818    0.000    2.751    2.698
+   .W1_SE9            2.903    0.025  117.137    0.000    2.903    3.016
+   .W1_SR1            3.206    0.023  139.602    0.000    3.206    3.601
+   .W1_SR2            2.576    0.026   99.917    0.000    2.576    2.574
+   .W1_SR3            2.710    0.027   98.553    0.000    2.710    2.539
+   .W1_SR4            2.815    0.027  103.474    0.000    2.815    2.665
+   .W1_SR5            2.631    0.027   95.762    0.000    2.631    2.466
+   .W1_SR6            2.542    0.026   96.493    0.000    2.542    2.485
+   .W1_SR7            3.109    0.024  129.462    0.000    3.109    3.336
+   .W1_SR8            2.789    0.026  105.833    0.000    2.789    2.725
+   .W1_SR9            2.845    0.027  104.595    0.000    2.845    2.695
+   .W1_SR10           2.721    0.027  100.079    0.000    2.721    2.577
+   .W1_SR11           3.179    0.023  141.229    0.000    3.179    3.636
+   .W1_SR12           2.981    0.028  105.010    0.000    2.981    2.704
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .W1_FBP1           0.401    0.017   23.683    0.000    0.401    0.500
+   .W1_FBP2           0.422    0.019   21.667    0.000    0.422    0.393
+   .W1_FBP3           0.506    0.021   24.067    0.000    0.506    0.503
+   .W1_FBP4           0.290    0.015   19.961    0.000    0.290    0.337
+   .W1_FBP5           0.418    0.021   20.310    0.000    0.418    0.342
+   .W1_SE1            0.442    0.016   26.851    0.000    0.442    0.883
+   .W1_SE2            0.474    0.019   24.727    0.000    0.474    0.609
+   .W1_SE3            0.529    0.020   26.663    0.000    0.529    0.843
+   .W1_SE4            0.520    0.022   23.367    0.000    0.520    0.517
+   .W1_SE5            0.658    0.024   27.179    0.000    0.658    0.939
+   .W1_SE6            0.365    0.016   22.449    0.000    0.365    0.468
+   .W1_SE7            0.361    0.016   22.862    0.000    0.361    0.485
+   .W1_SE8            0.654    0.026   24.813    0.000    0.654    0.629
+   .W1_SE9            0.511    0.021   24.013    0.000    0.511    0.551
+   .W1_SR1            0.553    0.022   25.348    0.000    0.553    0.698
+   .W1_SR2            0.656    0.027   24.700    0.000    0.656    0.655
+   .W1_SR3            0.887    0.034   26.074    0.000    0.887    0.778
+   .W1_SR4            0.986    0.037   26.824    0.000    0.986    0.883
+   .W1_SR5            1.011    0.038   26.842    0.000    1.011    0.888
+   .W1_SR6            0.613    0.026   23.809    0.000    0.613    0.586
+   .W1_SR7            0.660    0.026   25.844    0.000    0.660    0.761
+   .W1_SR8            0.774    0.030   25.707    0.000    0.774    0.739
+   .W1_SR9            0.857    0.033   26.025    0.000    0.857    0.769
+   .W1_SR10           0.753    0.030   25.126    0.000    0.753    0.676
+   .W1_SR11           0.595    0.023   26.089    0.000    0.595    0.778
+   .W1_SR12           0.798    0.032   24.925    0.000    0.798    0.656
+    FBP               0.400    0.027   15.012    0.000    1.000    1.000
+    SE                0.059    0.009    6.378    0.000    1.000    1.000
+    SR                0.240    0.022   10.738    0.000    1.000    1.000</code></pre>
+</div>
+</div>
+<p>Fit is mixed. RMSEA (0.062) and SRMR (0.050) fall within common guidelines, but CFI (0.87) and TLI (0.86) are below the usual 0.90 to 0.95 range. In a real analysis, we would look for the source of misfit (for example, items with weak loadings or correlated residuals) before going further. For this demonstration, we proceed with the model as specified.</p>
+<p>The path diagram below leaves out the intercepts and item residuals to keep it readable:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(cfa_fit, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">intercepts =</span> <span class="cn">FALSE</span>, <span class="at">residuals =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">sizeMan =</span> <span class="dv">3</span>, <span class="at">edge.label.cex =</span> <span class="fl">0.6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="12-sem-mediation_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-the-structural-model" class="level3" data-number="12.3.3">
+<h3 data-number="12.3.3" class="anchored" data-anchor-id="step-2-the-structural-model"><span class="header-section-number">12.3.3</span> Step 2: The structural model</h3>
+<p>The full model combines the measurement model from Step 1 with mediation paths among the latent variables. The structural part uses the same labels and <code>:=</code> definitions as the observed-variable model.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sem_model <span class="ot">&lt;-</span> <span class="fu">paste</span>(cfa_model, <span class="st">'</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="st">  # direct effect</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="st">  SR ~ c * SE</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # mediator</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">  FBP ~ a * SE</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="st">  SR  ~ b * FBP</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="st">  # indirect and total effects</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="st">  ab := a * b</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="st">  total := c + (a * b)</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="st">'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>sem_fit <span class="ot">&lt;-</span> <span class="fu">sem</span>(sem_model, <span class="at">data =</span> writing, <span class="at">missing =</span> <span class="st">"ml"</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sem_fit, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.7-2 ended normally after 91 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        81
+
+  Number of observations                          1509
+  Number of missing patterns                        27
+
+Model Test User Model:
+                                                      
+  Test statistic                              1988.299
+  Degrees of freedom                               296
+  P-value (Chi-square)                           0.000
+
+Model Test Baseline Model:
+
+  Test statistic                             13338.258
+  Degrees of freedom                               325
+  P-value                                        0.000
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.870
+  Tucker-Lewis Index (TLI)                       0.857
+                                                      
+  Robust Comparative Fit Index (CFI)             0.870
+  Robust Tucker-Lewis Index (TLI)                0.857
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -48264.380
+  Loglikelihood unrestricted model (H1)     -47270.231
+                                                      
+  Akaike (AIC)                               96690.761
+  Bayesian (BIC)                             97121.616
+  Sample-size adjusted Bayesian (SABIC)      96864.301
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.062
+  90 Percent confidence interval - lower         0.059
+  90 Percent confidence interval - upper         0.064
+  P-value H_0: RMSEA &lt;= 0.050                    0.000
+  P-value H_0: RMSEA &gt;= 0.080                    0.000
+                                                      
+  Robust RMSEA                                   0.062
+  90 Percent confidence interval - lower         0.059
+  90 Percent confidence interval - upper         0.064
+  P-value H_0: Robust RMSEA &lt;= 0.050             0.000
+  P-value H_0: Robust RMSEA &gt;= 0.080             0.000
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.050
+
+Goodness of Fit Index:
+
+  Goodness of Fit Index (GFI)                    0.921
+  90 Percent confidence interval - lower         0.914
+  90 Percent confidence interval - upper         0.927
+                                                      
+  Robust GFI                                     0.920
+  90 Percent confidence interval - lower         0.914
+  90 Percent confidence interval - upper         0.926
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  FBP =~                                                                
+    W1_FBP1           1.000                               0.633    0.707
+    W1_FBP2           1.276    0.047   27.173    0.000    0.807    0.779
+    W1_FBP3           1.117    0.044   25.105    0.000    0.707    0.705
+    W1_FBP4           1.194    0.040   29.778    0.000    0.755    0.814
+    W1_FBP5           1.416    0.050   28.119    0.000    0.896    0.811
+  SE =~                                                                 
+    W1_SE1            1.000                               0.243    0.343
+    W1_SE2            2.274    0.190   11.941    0.000    0.552    0.625
+    W1_SE3            1.293    0.126   10.291    0.000    0.314    0.396
+    W1_SE4            2.873    0.236   12.166    0.000    0.697    0.695
+    W1_SE5            0.852    0.111    7.679    0.000    0.207    0.247
+    W1_SE6            2.654    0.214   12.391    0.000    0.644    0.729
+    W1_SE7            2.552    0.207   12.308    0.000    0.619    0.718
+    W1_SE8            2.559    0.217   11.768    0.000    0.621    0.609
+    W1_SE9            2.657    0.219   12.107    0.000    0.645    0.670
+  SR =~                                                                 
+    W1_SR1            1.000                               0.490    0.550
+    W1_SR2            1.201    0.070   17.251    0.000    0.588    0.588
+    W1_SR3            1.026    0.070   14.625    0.000    0.503    0.471
+    W1_SR4            0.738    0.065   11.329    0.000    0.361    0.342
+    W1_SR5            0.729    0.066   11.120    0.000    0.357    0.335
+    W1_SR6            1.344    0.074   18.180    0.000    0.658    0.643
+    W1_SR7            0.931    0.062   15.106    0.000    0.456    0.489
+    W1_SR8            1.068    0.068   15.638    0.000    0.523    0.511
+    W1_SR9            1.036    0.070   14.878    0.000    0.507    0.480
+    W1_SR10           1.228    0.073   16.846    0.000    0.601    0.570
+    W1_SR11           0.842    0.057   14.847    0.000    0.412    0.471
+    W1_SR12           1.320    0.077   17.073    0.000    0.646    0.586
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  SR ~                                                                  
+    SE         (c)    1.127    0.117    9.611    0.000    0.558    0.558
+  FBP ~                                                                 
+    SE         (a)    1.635    0.148   11.066    0.000    0.627    0.627
+  SR ~                                                                  
+    FBP        (b)    0.254    0.027    9.478    0.000    0.329    0.329
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .W1_FBP1           3.394    0.023  147.261    0.000    3.394    3.792
+   .W1_FBP2           2.941    0.027  110.275    0.000    2.941    2.840
+   .W1_FBP3           3.232    0.026  125.156    0.000    3.232    3.224
+   .W1_FBP4           3.245    0.024  135.924    0.000    3.245    3.500
+   .W1_FBP5           2.800    0.028   98.441    0.000    2.800    2.534
+   .W1_SE1            3.552    0.018  194.685    0.000    3.552    5.018
+   .W1_SE2            2.963    0.023  130.449    0.000    2.963    3.359
+   .W1_SE3            3.355    0.020  164.465    0.000    3.355    4.234
+   .W1_SE4            2.862    0.026  110.737    0.000    2.862    2.853
+   .W1_SE5            3.133    0.022  145.393    0.000    3.133    3.744
+   .W1_SE6            3.084    0.023  135.653    0.000    3.084    3.493
+   .W1_SE7            3.166    0.022  142.530    0.000    3.166    3.670
+   .W1_SE8            2.751    0.026  104.818    0.000    2.751    2.698
+   .W1_SE9            2.903    0.025  117.137    0.000    2.903    3.016
+   .W1_SR1            3.206    0.023  139.602    0.000    3.206    3.601
+   .W1_SR2            2.576    0.026   99.917    0.000    2.576    2.574
+   .W1_SR3            2.710    0.027   98.553    0.000    2.710    2.539
+   .W1_SR4            2.815    0.027  103.474    0.000    2.815    2.665
+   .W1_SR5            2.631    0.027   95.762    0.000    2.631    2.466
+   .W1_SR6            2.542    0.026   96.493    0.000    2.542    2.485
+   .W1_SR7            3.109    0.024  129.462    0.000    3.109    3.336
+   .W1_SR8            2.789    0.026  105.833    0.000    2.789    2.725
+   .W1_SR9            2.845    0.027  104.595    0.000    2.845    2.695
+   .W1_SR10           2.721    0.027  100.079    0.000    2.721    2.577
+   .W1_SR11           3.179    0.023  141.230    0.000    3.179    3.636
+   .W1_SR12           2.981    0.028  105.010    0.000    2.981    2.704
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .W1_FBP1           0.401    0.017   23.683    0.000    0.401    0.500
+   .W1_FBP2           0.422    0.019   21.667    0.000    0.422    0.393
+   .W1_FBP3           0.506    0.021   24.067    0.000    0.506    0.503
+   .W1_FBP4           0.290    0.015   19.961    0.000    0.290    0.337
+   .W1_FBP5           0.418    0.021   20.310    0.000    0.418    0.342
+   .W1_SE1            0.442    0.016   26.852    0.000    0.442    0.883
+   .W1_SE2            0.474    0.019   24.727    0.000    0.474    0.609
+   .W1_SE3            0.529    0.020   26.663    0.000    0.529    0.843
+   .W1_SE4            0.520    0.022   23.367    0.000    0.520    0.517
+   .W1_SE5            0.658    0.024   27.179    0.000    0.658    0.939
+   .W1_SE6            0.365    0.016   22.449    0.000    0.365    0.468
+   .W1_SE7            0.361    0.016   22.862    0.000    0.361    0.485
+   .W1_SE8            0.654    0.026   24.813    0.000    0.654    0.629
+   .W1_SE9            0.511    0.021   24.013    0.000    0.511    0.551
+   .W1_SR1            0.553    0.022   25.348    0.000    0.553    0.698
+   .W1_SR2            0.656    0.027   24.700    0.000    0.656    0.655
+   .W1_SR3            0.887    0.034   26.073    0.000    0.887    0.778
+   .W1_SR4            0.986    0.037   26.824    0.000    0.986    0.883
+   .W1_SR5            1.011    0.038   26.842    0.000    1.011    0.888
+   .W1_SR6            0.613    0.026   23.809    0.000    0.613    0.586
+   .W1_SR7            0.660    0.026   25.844    0.000    0.660    0.761
+   .W1_SR8            0.774    0.030   25.707    0.000    0.774    0.739
+   .W1_SR9            0.857    0.033   26.025    0.000    0.857    0.769
+   .W1_SR10           0.753    0.030   25.126    0.000    0.753    0.676
+   .W1_SR11           0.595    0.023   26.089    0.000    0.595    0.778
+   .W1_SR12           0.798    0.032   24.925    0.000    0.798    0.656
+   .FBP               0.243    0.017   13.939    0.000    0.607    0.607
+    SE                0.059    0.009    6.378    0.000    1.000    1.000
+   .SR                0.084    0.009    9.340    0.000    0.350    0.350
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    ab                0.416    0.054    7.731    0.000    0.206    0.206
+    total             1.543    0.142   10.868    0.000    0.764    0.764</code></pre>
+</div>
+</div>
+<p><code>paste()</code> joins the measurement model and the structural paths into one model string, so we do not have to retype the items.</p>
+<p>Notice that the fit statistics are identical to those of the CFA. The structural part of this model is just-identified, like the observed-variable model above. It adds paths but uses no additional degrees of freedom. As a result, any misfit comes from the measurement model.</p>
+<p>In the standardized solution, the indirect effect of self-efficacy on self-regulation through feedback perceptions is 0.21, and the direct effect is 0.56. As in the first example, this suggests partial mediation.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavInspect</span>(sem_fit, <span class="st">"r2"</span>)[<span class="fu">c</span>(<span class="st">"FBP"</span>, <span class="st">"SR"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      FBP        SR 
+0.3929669 0.6497901 </code></pre>
+</div>
+</div>
+</section>
+<section id="bootstrapped-confidence-intervals-1" class="level3" data-number="12.3.4">
+<h3 data-number="12.3.4" class="anchored" data-anchor-id="bootstrapped-confidence-intervals-1"><span class="header-section-number">12.3.4</span> Bootstrapped confidence intervals</h3>
+<p>The same bootstrap approach works for the latent model. With 26 items and 1,509 students, this one takes several minutes to run.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">663</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>sem_boot <span class="ot">&lt;-</span> <span class="fu">sem</span>(sem_model, <span class="at">data =</span> writing, <span class="at">missing =</span> <span class="st">"ml"</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">se =</span> <span class="st">"bootstrap"</span>, <span class="at">bootstrap =</span> <span class="dv">1000</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">parameterEstimates</span>(sem_boot, <span class="at">boot.ci.type =</span> <span class="st">"perc"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(op <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"~"</span>, <span class="st">":="</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["lhs"],"name":[1],"type":["chr"],"align":["left"]},{"label":["op"],"name":[2],"type":["chr"],"align":["left"]},{"label":["rhs"],"name":[3],"type":["chr"],"align":["left"]},{"label":["label"],"name":[4],"type":["chr"],"align":["left"]},{"label":["est"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["z"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["pvalue"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["ci.lower"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["ci.upper"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"SR","2":"~","3":"SE","4":"c","5":"1.1270010","6":"0.14301889","7":"7.880085","8":"3.330669e-15","9":"0.8874094","10":"1.4512356"},{"1":"FBP","2":"~","3":"SE","4":"a","5":"1.6348150","6":"0.18556482","7":"8.809940","8":"0.000000e+00","9":"1.3162565","10":"2.0540919"},{"1":"SR","2":"~","3":"FBP","4":"b","5":"0.2542516","6":"0.02955435","7":"8.602848","8":"0.000000e+00","9":"0.1972474","10":"0.3154454"},{"1":"ab","2":":=","3":"a*b","4":"ab","5":"0.4156543","6":"0.06406947","7":"6.487557","8":"8.723933e-11","9":"0.3000685","10":"0.5564938"},{"1":"total","2":":=","3":"c+(a*b)","4":"total","5":"1.5426553","6":"0.17101063","7":"9.020815","8":"0.000000e+00","9":"1.2572332","10":"1.9506873"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="path-diagram-1" class="level3" data-number="12.3.5">
+<h3 data-number="12.3.5" class="anchored" data-anchor-id="path-diagram-1"><span class="header-section-number">12.3.5</span> Path diagram</h3>
+<p>With 26 items, a full diagram is hard to read. <code>structural = TRUE</code> draws only the paths among the latent variables:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(sem_fit, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">structural =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">intercepts =</span> <span class="cn">FALSE</span>, <span class="at">residuals =</span> <span class="cn">FALSE</span>, <span class="at">sizeLat =</span> <span class="dv">12</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">edge.label.cex =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="12-sem-mediation_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./11-sem-path-analysis.html" class="pagination-link" aria-label="Structural Equation Modeling I: Path Analysis and Latent Variables">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Structural Equation Modeling I: Path Analysis and Latent Variables</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

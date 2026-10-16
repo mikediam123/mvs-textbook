@@ -1,0 +1,47 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Applied Multivariate Statistics in Education"
+  subtitle: "Worked Examples in R for EDUS 663"
+  author: "Michael Broda"
+  date: today
+  repo-url: https://github.com/mikediam123/mvs-textbook
+  chapters:
+    - index.qmd
+    - part: "Foundations"
+      chapters:
+        - 01-getting-started.qmd
+        - 02-regression-anova-review.qmd
+    - part: "Extending the General Linear Model"
+      chapters:
+        - 03-moderation.qmd
+        - 04-repeated-measures.qmd
+        - 05-assumptions.qmd
+        - 06-logistic-regression.qmd
+        - 07-missing-data.qmd
+    - part: "Classification and Measurement"
+      chapters:
+        - 08-cluster-analysis.qmd
+        - 09-efa.qmd
+        - 10-cfa.qmd
+    - part: "Structural Equation Modeling"
+      chapters:
+        - 11-sem-path-analysis.qmd
+        - 12-sem-mediation.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    code-overflow: wrap
+    df-print: paged
+    fig-width: 7
+    fig-height: 4.5
+
+execute:
+  warning: false
+  message: false
+  freeze: auto

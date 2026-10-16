@@ -1,0 +1,185 @@
+# Moderation and Interaction Effects {#sec-moderation}
+
+A moderator is a variable that changes the strength or direction of the relationship between a predictor and an outcome. In regression, we test moderation by adding an *interaction term*: the product of the predictor and the moderator. If the interaction is significant, the effect of the predictor depends on the level of the moderator.
+
+In this chapter, we build up an interaction model one step at a time. We start with continuous variables and then move to categorical ones. Along the way, we center predictors and use `ggeffects` to plot the predicted values that make interactions interpretable.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(psych)
+library(ggeffects)
+library(modelsummary)
+```
+
+## The data
+
+::: {.callout-note appearance="simple"}
+**Note:** These data are simulated to match a study of video game play and aggressive behavior (McNulty, 2015).
+:::
+
+The data include 442 participants. The outcome is a measure of `aggression`. The predictor is `vidgames`, hours of video games played per week. The proposed moderator is `CaUnTs`, a score for callous-unemotional traits. We rename `CaUnTs` to something easier to type and save the result as a clean copy of the data.
+
+```{r}
+videogames <- read_dta("data/VideoGames.dta")
+
+videogames_clean <- videogames |>
+  rename(callous = CaUnTs)
+
+describe(videogames_clean, fast = TRUE)
+```
+
+## A model without an interaction
+
+We start with an ordinary multiple regression. Here, each predictor's effect is assumed to be the same at every level of the other predictor.
+
+```{r}
+model1 <- lm(aggression ~ vidgames + callous, data = videogames_clean)
+summary(model1)
+```
+
+Both predictors are positively related to aggression. However, this model cannot tell us whether the effect of video games is stronger for some participants than for others.
+
+## Continuous predictor, continuous moderator
+
+To test whether `callous` moderates the effect of `vidgames`, we add their product to the model. In R, `vidgames * callous` expands to `vidgames + callous + vidgames:callous`.
+
+```{r}
+model2 <- lm(aggression ~ vidgames * callous, data = videogames_clean)
+summary(model2)
+```
+
+The interaction term is positive and significant. This suggests that the relationship between video game play and aggression grows stronger as callous-unemotional traits increase.
+
+Notice that the coefficient for `vidgames` changed sign, from positive in Model 1 to negative here. Once an interaction is in the model, the coefficient for `vidgames` is no longer an "overall" effect. Instead, it is the effect of video games when `callous` equals zero. Very few participants score near zero on that scale, so this coefficient is not very meaningful on its own.
+
+### Centering
+
+Centering fixes this interpretation problem. When we subtract the mean from each continuous predictor, zero becomes the sample average. Each lower-order coefficient then describes the effect of one predictor for a participant who is average on the other.
+
+```{r}
+videogames_clean <- videogames_clean |>
+  mutate(
+    vidgames_c = vidgames - mean(vidgames),
+    callous_c = callous - mean(callous)
+  )
+
+model3 <- lm(aggression ~ vidgames_c * callous_c, data = videogames_clean)
+summary(model3)
+```
+
+Compare Model 3 to Model 2. The interaction coefficient, its standard error, and the model *R*² are identical. Centering does not change the fit of the model. It only changes what the lower-order coefficients mean. In Model 3, the `vidgames_c` coefficient is the effect of one additional hour of video games for a participant with an average callousness score. The intercept is the predicted aggression score for a participant who is average on both predictors.
+
+### Plotting the interaction
+
+Coefficients alone make interactions hard to see. A plot of predicted values is usually the clearest way to communicate one. `ggpredict()` computes predicted aggression across the range of `vidgames` at three values of `callous`: one standard deviation below the mean, the mean, and one standard deviation above it.
+
+```{r}
+pred_cont <- ggpredict(model2, terms = c("vidgames", "callous [meansd]"))
+
+plot(pred_cont) +
+  labs(
+    title = NULL,
+    x = "Video games (hours per week)",
+    y = "Predicted aggression",
+    color = "Callous-unemotional\ntraits"
+  )
+```
+
+The lines fan out. Among participants low in callous-unemotional traits, video game play is almost unrelated to aggression. Among those high in these traits, the predicted aggression rises with each additional hour of play.
+
+## Continuous predictor, categorical moderator
+
+Moderators are often categorical (for example, treatment and control groups). To demonstrate, we split `callous` into high (20 or above) and low groups.
+
+::: {.callout-note appearance="simple"}
+**Note:** Splitting a continuous variable into groups throws away information and reduces statistical power. We do it here only to show how a categorical moderator works. In your own work, keep a continuous moderator continuous.
+:::
+
+We use `case_when()` to create the groups and `factor()` to give them labels. The first level listed becomes the reference group.
+
+```{r}
+videogames_clean <- videogames_clean |>
+  mutate(
+    callous_group = case_when(
+      callous >= 20 ~ "High",
+      callous < 20 ~ "Low"
+    ),
+    callous_group = factor(callous_group, levels = c("Low", "High"))
+  )
+
+table(videogames_clean$callous_group)
+```
+
+```{r}
+model4 <- lm(aggression ~ vidgames * callous_group, data = videogames_clean)
+summary(model4)
+```
+
+With a categorical moderator, the coefficients are easier to read directly:
+
+- `vidgames` is the slope for video games in the reference group (low callous).
+- `callous_groupHigh` is the difference between groups when `vidgames` equals zero.
+- `vidgames:callous_groupHigh` is how much steeper the video game slope is for the high callous group.
+
+```{r}
+pred_cat <- ggpredict(model4, terms = c("vidgames", "callous_group"))
+
+plot(pred_cat) +
+  labs(
+    title = NULL,
+    x = "Video games (hours per week)",
+    y = "Predicted aggression",
+    color = "Callous-unemotional\ntraits"
+  )
+```
+
+## Categorical predictor, categorical moderator
+
+When both variables are categorical, the interaction model is the same as a two-way ANOVA with an interaction (@sec-review). To demonstrate, we also split `vidgames` into high (22 or more hours per week) and low groups.
+
+```{r}
+videogames_clean <- videogames_clean |>
+  mutate(
+    vidgames_group = case_when(
+      vidgames >= 22 ~ "High",
+      vidgames < 22 ~ "Low"
+    ),
+    vidgames_group = factor(vidgames_group, levels = c("Low", "High"))
+  )
+
+model5 <- lm(aggression ~ vidgames_group * callous_group, data = videogames_clean)
+summary(model5)
+```
+
+Here, the intercept is the mean aggression score for the low/low group, and each coefficient adds a piece to that baseline. The interaction term is the extra difference found only in the high video games, high callous group.
+
+```{r}
+pred_both <- ggpredict(model5, terms = c("vidgames_group", "callous_group"))
+
+plot(pred_both, connect_lines = TRUE) +
+  labs(
+    title = NULL,
+    x = "Video game play",
+    y = "Predicted aggression",
+    color = "Callous-unemotional\ntraits"
+  )
+```
+
+Lines that are not parallel indicate an interaction. Heavy video game play is associated with higher predicted aggression only in the high callous group.
+
+## Summarizing the models
+
+```{r}
+modelsummary(
+  list(
+    "Additive" = model1,
+    "Continuous" = model2,
+    "Centered" = model3,
+    "Categorical moderator" = model4,
+    "Both categorical" = model5
+  ),
+  stars = TRUE,
+  gof_map = c("nobs", "r.squared", "adj.r.squared")
+)
+```

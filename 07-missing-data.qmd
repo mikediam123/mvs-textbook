@@ -1,0 +1,162 @@
+# Missing Data and Multiple Imputation {#sec-missing}
+
+Almost every real dataset has missing values. By default, most R functions handle them with *listwise deletion*: any case missing a variable in the model is dropped. This can shrink the sample a great deal, and, if the missing cases differ from the others, it can bias the results. In this chapter, we explore patterns of missing data, ask why the data might be missing, and use multiple imputation to keep every case in the analysis.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(psych)
+library(naniar)
+library(mice)
+```
+
+## The data
+
+The data come from a 2004 survey of 4,508 Oregon residents about community and environmental health. Our outcome is a scale score for concern about the environment (`env_con`). The predictors are:
+
+- `com3`: how much the respondent feels a part of their community (1 to 5)
+- `epht3`: concern about the impact of the environment on people's health (1 to 4)
+- `male`: 1 = male, 0 = not male
+- `hlthprob`: 1 = reported health problems, 0 = none
+- `inc`: household income
+- `educat`: highest year of education completed
+
+Income is recorded in dollars, so a one-unit change is one dollar. We rescale it to units of $10,000, which makes its coefficient readable. We also drop the ID variable, which we do not need and should not be used to impute other values.
+
+```{r}
+oregon <- read_dta("data/oregon2004.dta") |>
+  zap_labels() |>
+  mutate(inc = inc / 10000) |>
+  select(-ID)
+
+describe(oregon, fast = TRUE)
+```
+
+Notice that `n` differs across variables. That is the first sign of missing data.
+
+## What listwise deletion does
+
+Here is the regression model we want to estimate:
+
+```{r}
+model_listwise <- lm(env_con ~ com3 + epht3 + male + hlthprob + inc + educat,
+                     data = oregon)
+summary(model_listwise)
+```
+
+The output notes that more than 1,600 observations were deleted due to missingness. Thus, more than a third of the sample is gone.
+
+## Exploring missing data
+
+`miss_var_summary()` from the `naniar` package counts and ranks the missing values for each variable:
+
+```{r}
+miss_var_summary(oregon)
+```
+
+A plot often makes the pattern easier to see. In `vis_miss()`, each row is a respondent, and black cells are missing values:
+
+```{r}
+vis_miss(oregon)
+```
+
+Most of the missing data are in education (`educat`) and income (`inc`). `geom_miss_point()` shows how these two variables relate. Cases missing one variable are plotted below the axis of the other, so we can see where they fall on the variable they did report.
+
+```{r}
+ggplot(oregon, aes(x = educat, y = inc)) +
+  geom_miss_point(alpha = 0.5) +
+  labs(x = "Years of education", y = "Household income ($10,000s)")
+```
+
+## Why are the data missing?
+
+How we should handle missing data depends on *why* it is missing. There are three possibilities:
+
+- **Missing completely at random (MCAR)**: missingness is unrelated to anything, observed or not. Listwise deletion loses power but does not introduce bias.
+- **Missing at random (MAR)**: missingness is related to other *observed* variables. Multiple imputation and full information maximum likelihood can correct for it.
+- **Missing not at random (MNAR)**: missingness is related to the missing values themselves (for example, people with high incomes declining to report income). No method fully corrects for this without strong assumptions.
+
+### Little's MCAR test
+
+Little's test asks whether the data are consistent with MCAR. Its null hypothesis is that they are.
+
+```{r}
+mcar_test(oregon)
+```
+
+The test is significant, so we reject MCAR. Listwise deletion may therefore bias our results.
+
+### Predicting missingness
+
+We cannot test MAR against MNAR directly. However, we can look for observed variables that predict missingness. If we find some, including them in the imputation model makes the MAR assumption more plausible. We start by creating indicators equal to 1 if a value is missing and 0 if not:
+
+```{r}
+oregon_miss <- oregon |>
+  mutate(
+    educat_miss = if_else(is.na(educat), 1, 0),
+    inc_miss = if_else(is.na(inc), 1, 0)
+  )
+```
+
+Then we use logistic regression (@sec-logistic) to predict each indicator from the other variables:
+
+```{r}
+glm(educat_miss ~ com3 + epht3 + env_con + male + hlthprob + inc,
+    family = binomial, data = oregon_miss) |>
+  summary()
+```
+
+```{r}
+glm(inc_miss ~ com3 + epht3 + env_con + male + hlthprob + educat,
+    family = binomial, data = oregon_miss) |>
+  summary()
+```
+
+Missingness on education is related to sense of community. Missingness on income is related to gender, health problems, and environmental concern. These results suggest that the data are not MCAR, and that several observed variables carry information about who is missing.
+
+## Multiple imputation
+
+Multiple imputation replaces each missing value with a set of plausible values drawn from a model based on the observed data. The process has three steps:
+
+1. **Impute**: create several complete datasets, each with different imputed values.
+2. **Analyze**: fit the same model to each dataset.
+3. **Pool**: combine the results. The pooled standard errors include the extra uncertainty from not knowing the missing values.
+
+### Step 1: Impute
+
+`mice()` creates the imputed datasets. Here, we create 5 (`m = 5`) using predictive mean matching (`method = "pmm"`), which fills each missing value with an observed value from a case with a similar prediction. Setting `seed` makes the imputations reproducible.
+
+```{r}
+imputed <- mice(oregon, m = 5, maxit = 5, method = "pmm",
+                seed = 23284, printFlag = FALSE)
+```
+
+Before using the imputations, we check that they look reasonable. In a strip plot, the first column shows the observed data and each of the next five shows one imputed dataset. Observed values are blue, and imputed values are red. Imputed values should fall within the range of the observed ones.
+
+```{r}
+stripplot(imputed, educat ~ .imp, pch = 20, jitter.data = TRUE,
+          xlab = "Dataset (first column = observed data; 2 to 6 = imputations)")
+```
+
+### Steps 2 and 3: Analyze and pool
+
+`with()` fits the model to each imputed dataset, and `pool()` combines the results:
+
+```{r}
+model_mi <- with(imputed,
+                 lm(env_con ~ com3 + epht3 + male + hlthprob + inc + educat))
+
+summary(pool(model_mi))
+```
+
+### Comparing the results
+
+```{r}
+tibble(
+  term = names(coef(model_listwise)),
+  listwise = coef(model_listwise),
+  imputed = summary(pool(model_mi))$estimate
+)
+```
+
+In this example, the coefficients are similar under both approaches, and the substantive conclusions do not change. However, the pooled analysis uses all 4,508 respondents, so most standard errors are smaller. When the missing cases differ more from the complete ones, the two approaches can lead to different conclusions.

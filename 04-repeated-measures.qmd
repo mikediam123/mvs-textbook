@@ -1,0 +1,213 @@
+# ANCOVA and Repeated Measures ANOVA {#sec-repeated-measures}
+
+This chapter extends the ANOVA model in two directions. First, analysis of covariance (ANCOVA) adds continuous covariates to a between-groups comparison. This can reduce error variance and increase power. Second, repeated measures ANOVA compares means when the same participants are measured more than once.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(effectsize)
+library(rstatix)
+library(ggpubr)
+```
+
+## ANCOVA with a pretest covariate
+
+### The data
+
+In our first example, 82 participants were randomly assigned to a control group or to an optimism therapy group. Happiness was measured before (`hap_pre`) and after (`hap_post`) the intervention.
+
+```{r}
+hap1 <- read_dta("data/hap-ancova1.dta")
+
+hap1_clean <- hap1 |>
+  mutate(treat = as_factor(treat))
+
+summary(hap1_clean)
+```
+
+A covariate is only useful if it is related to the outcome. Here, pretest and posttest happiness are moderately correlated:
+
+```{r}
+cor.test(hap1_clean$hap_pre, hap1_clean$hap_post)
+```
+
+### ANOVA without the covariate
+
+For comparison, we first ignore the pretest and compare posttest means with a one-way ANOVA:
+
+```{r}
+anova1 <- aov(hap_post ~ treat, data = hap1_clean)
+summary(anova1)
+```
+
+The treatment group's posttest mean is higher, but the difference is not significant.
+
+### Adding the covariate
+
+Now we add `hap_pre` as a covariate. The order of terms in `aov()` matters. `aov()` uses *sequential* (Type I) sums of squares, so each term is adjusted only for the terms listed before it. To test the treatment effect *after* adjusting for the pretest, the covariate must come first.
+
+```{r}
+ancova1 <- aov(hap_post ~ hap_pre + treat, data = hap1_clean)
+summary(ancova1)
+```
+
+After adjusting for pretest happiness, the treatment effect is significant. Two things changed. First, the pretest absorbed much of the error variance, which made the test of the treatment effect more sensitive. Second, the treatment group started slightly lower at pretest, so adjusting for the pretest makes the treatment effect a little larger.
+
+When two loaded packages have functions with the same name, the one loaded last *masks* the other. To make sure R uses the `omega_squared()` function from `effectsize`, we name the package with `::`.
+
+```{r}
+effectsize::omega_squared(ancova1, partial = TRUE)
+```
+
+### ANCOVA as a regression
+
+ANCOVA is a regression model with a categorical predictor and a continuous covariate. The regression output gives the same test of the treatment effect, along with a coefficient that is easier to interpret:
+
+```{r}
+regression1 <- lm(hap_post ~ hap_pre + treat, data = hap1_clean)
+summary(regression1)
+```
+
+Holding pretest happiness constant, participants in the optimism therapy group scored about 3.9 points higher at posttest than participants in the control group. The *p*-value matches the ANCOVA above.
+
+## ANCOVA with related covariates
+
+A pretest is not the only possible covariate. Measures related to the outcome can play the same role. The second dataset comes from a similar trial with 96 participants. It measures happiness (`hap`) only after the intervention, along with three covariates: satisfaction with family life (`satfam`), satisfaction with health (`health`), and how often participants socialize with friends (`socfriend`). Each covariate is a 7-point rating, treated here as continuous.
+
+```{r}
+hap2 <- read_dta("data/hap-ancova2.dta")
+
+hap2_clean <- hap2 |>
+  mutate(treat = as_factor(treat))
+
+glimpse(hap2_clean)
+```
+
+How much of the variance in happiness do the covariates explain on their own?
+
+```{r}
+covariates_only <- lm(hap ~ satfam + health + socfriend, data = hap2_clean)
+summary(covariates_only)$r.squared
+```
+
+The three covariates explain about 29% of the variance in happiness. That is variance the ANCOVA can remove from the error term. As before, we list the covariates first:
+
+```{r}
+ancova2 <- aov(hap ~ satfam + health + socfriend + treat, data = hap2_clean)
+summary(ancova2)
+```
+
+```{r}
+regression2 <- lm(hap ~ satfam + health + socfriend + treat, data = hap2_clean)
+summary(regression2)
+```
+
+## Repeated measures ANOVA
+
+### The data
+
+In a repeated measures design, each participant contributes more than one score. The `sleep_wide` data record the average minutes of sleep per night for 100 participants over three months.
+
+```{r}
+sleep_wide <- read_dta("data/sleep_wide.dta")
+glimpse(sleep_wide)
+```
+
+### Reshaping from wide to long
+
+These data are in *wide* format, with one row per participant and one column per month. Most repeated measures functions in R expect *long* format, with one row per participant per month. `pivot_longer()` reshapes the data:
+
+```{r}
+sleep_long <- sleep_wide |>
+  pivot_longer(
+    cols = starts_with("sleep"),
+    names_to = "month",
+    names_prefix = "sleep",
+    values_to = "sleep"
+  ) |>
+  mutate(month = factor(month))
+
+glimpse(sleep_long)
+```
+
+`pivot_wider()` reverses the process if you need to go back:
+
+```{r}
+sleep_long |>
+  pivot_wider(
+    names_from = month,
+    names_prefix = "sleep",
+    values_from = sleep
+  )
+```
+
+### Exploring the data
+
+Long format makes it easy to summarize and plot by month:
+
+```{r}
+sleep_long |>
+  group_by(month) |>
+  get_summary_stats(sleep, type = "mean_sd")
+```
+
+```{r}
+ggplot(sleep_long, aes(x = sleep)) +
+  geom_density() +
+  facet_wrap(~ month, ncol = 1, labeller = label_both) +
+  labs(x = "Sleep (minutes per night)", y = "Density")
+```
+
+### Checking assumptions
+
+Repeated measures ANOVA assumes that the outcome is approximately normal at each time point. A Q-Q plot and a Shapiro-Wilk test for each month check this:
+
+```{r}
+ggqqplot(sleep_long, "sleep", facet.by = "month")
+
+sleep_long |>
+  group_by(month) |>
+  shapiro_test(sleep)
+```
+
+Points fall close to the line, and none of the Shapiro-Wilk tests are significant. This suggests the normality assumption is reasonable. Because the three scores come from the same people, we can also test whether they are jointly (multivariate) normal:
+
+```{r}
+sleep_wide |>
+  select(starts_with("sleep")) |>
+  mshapiro_test()
+```
+
+A second assumption, *sphericity*, requires that the variances of the differences between every pair of time points are equal. `anova_test()` checks it automatically, as shown in the next section.
+
+### Running the model
+
+`anova_test()` from `rstatix` needs the outcome (`dv`), the participant identifier (`wid`), and the within-subjects factor (`within`):
+
+```{r}
+sleep_aov <- anova_test(data = sleep_long, dv = sleep, wid = id, within = month)
+sleep_aov
+```
+
+The output has three parts:
+
+1. The **ANOVA table**. Average sleep differs significantly across months. `ges` is the generalized eta squared effect size.
+2. **Mauchly's test for sphericity**. A non-significant result (as here) suggests the sphericity assumption is met.
+3. **Sphericity corrections**. If Mauchly's test were significant, we would report the Greenhouse-Geisser (GG) corrected *p*-value instead.
+
+`get_anova_table()` returns the table to report. It applies the Greenhouse-Geisser correction automatically if sphericity is violated.
+
+```{r}
+get_anova_table(sleep_aov)
+```
+
+### Post-hoc comparisons
+
+Paired *t*-tests with a Bonferroni correction compare each pair of months:
+
+```{r}
+sleep_long |>
+  pairwise_t_test(sleep ~ month, paired = TRUE, p.adjust.method = "bonferroni")
+```
+
+Participants slept significantly more in months 2 and 3 than in month 1. Months 2 and 3 did not differ.

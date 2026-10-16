@@ -1,0 +1,177 @@
+# Checking Model Assumptions {#sec-assumptions}
+
+Every statistical model rests on assumptions. When they are badly violated, standard errors, *p*-values, and even coefficients can be misleading. In this chapter, we work through a sequence of checks for a multiple regression model:
+
+1. Normality of residuals
+2. Homoskedasticity and linearity
+3. Influential observations
+4. Multicollinearity
+
+We then use bootstrapping as one way to get more trustworthy inferences when some assumptions do not hold. Many of these checks also apply to the models in later chapters.
+
+```{r}
+library(tidyverse)
+library(haven)
+library(psych)
+library(broom)
+library(lmtest)
+library(car)
+library(modelsummary)
+```
+
+## The data
+
+::: {.callout-note appearance="simple"}
+**Note:** These are teaching data with an outcome `y` and three predictors (`x1` to `x3`). They were built to violate several assumptions, so that we can see what problems look like.
+:::
+
+`zap_labels()` removes the Stata labels, which we do not need here.
+
+```{r}
+skew1 <- read_dta("data/skew1.dta") |>
+  zap_labels()
+
+describe(skew1)
+```
+
+## The model to check
+
+Assumption checks are done on a fitted model, so the first step is to settle on the model you plan to report:
+
+```{r}
+model1 <- lm(y ~ x1 + x2 + x3, data = skew1)
+summary(model1)
+```
+
+`augment()` from the `broom` package adds diagnostic values to each row of the data: fitted values (`.fitted`), residuals (`.resid`), standardized residuals (`.std.resid`), and Cook's distance (`.cooksd`). We also add an ID number so we can identify individual cases later.
+
+```{r}
+diagnostics <- augment(model1) |>
+  mutate(id = row_number())
+
+glimpse(diagnostics)
+```
+
+## Step 1: Normality of residuals
+
+Regression assumes that the *residuals*, not the variables themselves, are normally distributed. A histogram of standardized residuals is a good first look. The dotted lines mark ±2.5, beyond which few residuals should fall.
+
+```{r}
+ggplot(diagnostics, aes(x = .std.resid)) +
+  geom_histogram(binwidth = 0.25) +
+  geom_vline(xintercept = c(-2.5, 2.5), linetype = "dotted", color = "red") +
+  labs(x = "Standardized residual", y = "Count")
+```
+
+A Q-Q plot compares the residuals to a normal distribution. If the residuals are normal, the points fall along the diagonal line.
+
+```{r}
+plot(model1, which = 2)
+```
+
+The residuals have a long left tail, with several large negative values. The Shapiro-Wilk test supports what the plots suggest:
+
+```{r}
+shapiro.test(diagnostics$.resid)
+```
+
+The null hypothesis of the Shapiro-Wilk test is that the residuals are normal. Here, *p* < .001, so we reject it. Keep in mind that in large samples, this test can flag departures from normality too small to matter. Use it alongside the plots, not in place of them.
+
+## Step 2: Homoskedasticity and linearity
+
+A residuals-versus-fitted (RVF) plot checks two assumptions at once. If the variance of the residuals is constant (*homoskedasticity*), the points form a band of even width. If the relationship is linear, the smoothed line stays flat near zero.
+
+```{r}
+ggplot(diagnostics, aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "loess") +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  labs(x = "Fitted value", y = "Residual")
+```
+
+The smoothed line bends into an inverted U. The residuals are mostly positive in the middle of the fitted values and mostly negative at both ends. This suggests the model is missing a nonlinear relationship. It may also explain the long left tail we saw in Step 1. Two formal tests check each assumption separately.
+
+The **Breusch-Pagan test** checks for heteroskedasticity. Its null hypothesis is constant variance:
+
+```{r}
+bptest(model1)
+```
+
+The **Ramsey RESET test** checks functional form by asking whether squared terms of the predictors improve the model. Its null hypothesis is that the linear specification is adequate:
+
+```{r}
+resettest(model1, power = 2, type = "regressor")
+```
+
+The Breusch-Pagan test is not significant, but the RESET test is. Taken together with the plot, these results suggest the main problem is functional form: at least one predictor may have a nonlinear relationship with `y`.
+
+## Step 3: Influential observations
+
+Cook's distance measures how much the regression results would change if a single case were removed. Two common rules of thumb flag cases with a Cook's distance greater than 1, or greater than 4/*n*.
+
+```{r}
+cutoff <- 4 / nrow(diagnostics)
+
+ggplot(diagnostics, aes(x = .fitted, y = .cooksd, label = id)) +
+  geom_point() +
+  geom_text(data = filter(diagnostics, .cooksd > cutoff), nudge_x = 0.25) +
+  geom_hline(yintercept = cutoff, linetype = "dotted", color = "red") +
+  labs(x = "Fitted value", y = "Cook's distance")
+```
+
+No case exceeds 1, but several exceed 4/*n*. A flagged case should not be deleted automatically. Instead, we run a *sensitivity analysis*: we refit the model without the flagged cases and see whether the conclusions change.
+
+```{r}
+# Remove the few cases with the largest Cook's distances
+model_trim_large <- lm(y ~ x1 + x2 + x3,
+                       data = filter(diagnostics, .cooksd < 0.10))
+
+# Remove every case above 4/n
+model_trim_all <- lm(y ~ x1 + x2 + x3,
+                     data = filter(diagnostics, .cooksd < cutoff))
+
+modelsummary(
+  list(
+    "All cases" = model1,
+    "Largest removed" = model_trim_large,
+    "All above 4/n removed" = model_trim_all
+  ),
+  stars = TRUE,
+  gof_map = c("nobs", "r.squared")
+)
+```
+
+Across all three models, `x1` is the only significant predictor, and its coefficient changes only slightly. This suggests the main conclusion is not driven by a handful of influential cases. If the conclusions had changed, we would report both sets of results and investigate the flagged cases further.
+
+## Step 4: Multicollinearity
+
+When predictors are highly correlated with each other, their standard errors become inflated, and it is hard to separate their effects. The variance inflation factor (VIF) measures this for each predictor:
+
+```{r}
+vif(model1)
+```
+
+A VIF of 1 indicates no collinearity. Common cutoffs for concern are 5 or 10. Here, `x2` and `x3` have VIFs just above 5. This suggests they share a good deal of variance, which may partly explain why neither one is significant.
+
+## Bootstrapping
+
+When the residuals are not normal, the usual standard errors and confidence intervals may not be accurate. Bootstrapping is one remedy. It resamples the data with replacement many times, refits the model each time, and uses the spread of the resulting estimates to build confidence intervals. These intervals do not rely on the normality assumption.
+
+`Boot()` from the `car` package bootstraps a fitted model. Setting a seed makes the results reproducible.
+
+```{r}
+set.seed(663)
+model1_boot <- Boot(model1, R = 1000)
+
+confint(model1_boot, type = "perc")
+```
+
+Compare these percentile intervals to the standard ones:
+
+```{r}
+confint(model1)
+```
+
+The bootstrapped interval for `x1` is somewhat wider, but it still excludes zero. Thus, the conclusion about `x1` appears robust to the non-normal residuals.
+
+Bootstrapping helps with non-normality, but it does not fix a misspecified model. The RESET result in Step 2 would still need attention, for example by testing a squared term for one or more predictors.
